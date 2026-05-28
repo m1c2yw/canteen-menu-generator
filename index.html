@@ -295,6 +295,8 @@
   .icon.duck { background: var(--duck); }
   .icon.beef { background: var(--beef); }
   .icon.shrimp { background: var(--shrimp); }
+  .icon.fish { background: #2980b9; }
+  .icon.otherMeat { background: #e67e22; }
   .icon.vegetable { background: var(--vegetable); }
   .icon.soup { background: var(--soup); }
   .icon.noodle { background: var(--noodle); }
@@ -505,6 +507,48 @@ const DISH_DB = {
     { name: '白灼虾', cuisine: '粤菜' },
   ],
 
+  // 鱼类（大荤，川菜为主）
+  fish: [
+    { name: '水煮鱼', cuisine: '川菜' },
+    { name: '酸菜鱼', cuisine: '川菜' },
+    { name: '豆瓣鱼', cuisine: '川菜' },
+    { name: '干烧鱼', cuisine: '川菜' },
+    { name: '泡椒鱼片', cuisine: '川菜' },
+    { name: '麻辣鱼', cuisine: '川菜' },
+    { name: '剁椒鱼头', cuisine: '湘菜' },
+    { name: '红烧鱼块', cuisine: '川菜' },
+    { name: '糖醋鱼', cuisine: '鲁菜' },
+    { name: '清蒸鲈鱼', cuisine: '粤菜' },
+    { name: '葱油鱼', cuisine: '粤菜' },
+    { name: '豆腐鱼', cuisine: '川菜' },
+    { name: '香辣烤鱼', cuisine: '川菜' },
+    { name: '松鼠鱼', cuisine: '苏菜' },
+  ],
+
+  // 其他荤菜（猪肉等，川菜为主）
+  otherMeat: [
+    { name: '回锅肉', cuisine: '川菜' },
+    { name: '鱼香肉丝', cuisine: '川菜' },
+    { name: '水煮肉片', cuisine: '川菜' },
+    { name: '红烧肉', cuisine: '川菜' },
+    { name: '东坡肉', cuisine: '浙菜' },
+    { name: '粉蒸肉', cuisine: '川菜' },
+    { name: '锅包肉', cuisine: '东北菜' },
+    { name: '京酱肉丝', cuisine: '鲁菜' },
+    { name: '糖醋里脊', cuisine: '鲁菜' },
+    { name: '蒜泥白肉', cuisine: '川菜' },
+    { name: '盐煎肉', cuisine: '川菜' },
+    { name: '小炒肉', cuisine: '湘菜' },
+    { name: '梅菜扣肉', cuisine: '粤菜' },
+    { name: '红烧排骨', cuisine: '川菜' },
+    { name: '糖醋排骨', cuisine: '川菜' },
+    { name: '干锅排骨', cuisine: '川菜' },
+    { name: '酱肉丝', cuisine: '川菜' },
+    { name: '木须肉', cuisine: '鲁菜' },
+    { name: '宫保肉丁', cuisine: '川菜' },
+    { name: '咕噜肉', cuisine: '粤菜' },
+  ],
+
   // 素菜类（川菜为主，30道）
   vegetable: [
     { name: '麻婆豆腐', cuisine: '川菜' },
@@ -576,15 +620,12 @@ const DISH_DB = {
   ],
 };
 
-// 荤菜四个子类对应的中文标签
-const MEAT_LABELS = {
-  chicken: '鸡肉',
-  duck: '鸭肉',
-  beef: '牛肉',
-  shrimp: '虾',
-};
+// 大荤类型（每天从中选2种各1道）
+const BIG_MEAT_KEYS = ['chicken', 'duck', 'beef', 'fish', 'shrimp'];
 
-const MEAT_ICONS = { chicken: '🐔', duck: '🦆', beef: '🐂', shrimp: '🦐' };
+// 菜品类型中文标签和图标
+const MEAT_ICONS = { chicken: '🐔', duck: '🦆', beef: '🐂', fish: '🐟', shrimp: '🦐', otherMeat: '🐖' };
+const MEAT_LABELS = { chicken: '鸡肉', duck: '鸭肉', beef: '牛肉', fish: '鱼肉', shrimp: '虾', otherMeat: '猪肉' };
 const DISH_ICONS = { vegetable: '🥬', soup: '🥣', noodle: '🍜' };
 
 // ============================================================
@@ -695,19 +736,23 @@ function generateWeeklyMenu(mondayDate) {
   // 各类型洗牌
   const pools = {};
   for (const [key, dishes] of Object.entries(DISH_DB)) {
-    pools[key] = shuffle(dishes);
+    if (key === 'otherMeat') {
+      pools[key] = shuffle(dishes);
+    } else if (BIG_MEAT_KEYS.includes(key)) {
+      pools[key] = shuffle(dishes);
+    } else {
+      pools[key] = shuffle(dishes);
+    }
   }
-
-  const indices = {
-    chicken: 0, duck: 0, beef: 0, shrimp: 0,
-    vegetable: 0, soup: 0, noodle: 0,
-  };
+  // 特殊处理大荤和素菜/汤/面食索引
+  const bigIndices = {};
+  BIG_MEAT_KEYS.forEach(k => { bigIndices[k] = 0; });
+  const otherIndices = { otherMeat: 0, vegetable: 0, soup: 0, noodle: 0 };
 
   const week = [];
-  // 只遍历周一(i=1)到周五(i=5)
   for (let i = 0; i < 7; i++) {
     const dayOfWeek = (mondayDate.getDay() + i) % 7;
-    if (dayOfWeek === 0 || dayOfWeek === 6) continue; // 跳过周末
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue;
 
     const date = new Date(mondayDate);
     date.setDate(date.getDate() + i);
@@ -723,22 +768,30 @@ function generateWeeklyMenu(mondayDate) {
       continue;
     }
 
+    // 从大荤中随机选2种不同类型
+    const picked = shuffle([...BIG_MEAT_KEYS]).slice(0, 2);
+    const bigMeatDishes = picked.map(key => ({
+      ...pools[key][bigIndices[key]++],
+      meatType: key,
+    }));
+
     const day = {
       date: dateStr,
       dayName: getDayName(date),
       isHoliday: false,
       dishes: {
-        chicken: pools.chicken[indices.chicken++],
-        duck: pools.duck[indices.duck++],
-        beef: pools.beef[indices.beef++],
-        shrimp: pools.shrimp[indices.shrimp++],
-        vegetables: [
-          pools.vegetable[indices.vegetable++],
-          pools.vegetable[indices.vegetable++],
-          pools.vegetable[indices.vegetable++],
+        bigMeat: bigMeatDishes,
+        otherMeat: [
+          pools.otherMeat[otherIndices.otherMeat++],
+          pools.otherMeat[otherIndices.otherMeat++],
         ],
-        soup: pools.soup[indices.soup++],
-        noodle: pools.noodle[indices.noodle++],
+        vegetables: [
+          pools.vegetable[otherIndices.vegetable++],
+          pools.vegetable[otherIndices.vegetable++],
+          pools.vegetable[otherIndices.vegetable++],
+        ],
+        soup: pools.soup[otherIndices.soup++],
+        noodle: pools.noodle[otherIndices.noodle++],
       },
     };
 
@@ -790,7 +843,7 @@ function renderSummary() {
     workdayCount++;
     const d = day.dishes;
     const allDishes = [
-      d.chicken, d.duck, d.beef, d.shrimp,
+      ...d.bigMeat, ...d.otherMeat,
       ...d.vegetables, d.soup, d.noodle,
     ];
     allDishes.forEach(dish => {
@@ -846,10 +899,7 @@ function renderMenuGrid() {
           <div class="day-date">${day.date.slice(5)}</div>
         </div>
         <div class="day-body">
-          ${renderMeatGroup('chicken', d.chicken, day)}
-          ${renderMeatGroup('duck', d.duck, day)}
-          ${renderMeatGroup('beef', d.beef, day)}
-          ${renderMeatGroup('shrimp', d.shrimp, day)}
+          ${renderMeatGroup(d.bigMeat, d.otherMeat)}
           <hr class="divider">
           ${renderVegGroup(d.vegetables)}
           <hr class="divider">
@@ -861,19 +911,21 @@ function renderMenuGrid() {
   }).join('');
 }
 
-function renderMeatGroup(key, dish) {
-  const icon = MEAT_ICONS[key];
-  const label = MEAT_LABELS[key];
+function renderMeatGroup(bigMeat, otherMeat) {
+  const allMeat = [
+    ...bigMeat.map(d => ({ ...d, isBig: true })),
+    ...otherMeat.map(d => ({ ...d, isBig: false })),
+  ];
   return `
     <div class="dish-group">
-      <div class="group-label">
-        <span class="icon ${key}">${icon}</span> ${label}
-      </div>
+      <div class="group-label">🥩 荤菜</div>
       <ul class="dish-list">
-        <li class="dish-item">
-          <span class="dish-name">${dish.name}</span>
-          <span class="dish-tag ${cuisineTagClass(dish)}">${dish.cuisine}</span>
-        </li>
+        ${allMeat.map(d => `
+          <li class="dish-item">
+            <span class="dish-name">${MEAT_ICONS[d.meatType || 'otherMeat']} ${d.name}</span>
+            <span class="dish-tag ${cuisineTagClass(d)}">${d.cuisine}</span>
+          </li>
+        `).join('')}
       </ul>
     </div>
   `;
@@ -999,10 +1051,9 @@ function copyMenuText() {
     if (day.isHoliday) return;
     const d = day.dishes;
     text += `【${day.dayName} ${day.date.slice(5)}】\n`;
-    text += `  🐔 鸡肉：${d.chicken.name}（${d.chicken.cuisine}）\n`;
-    text += `  🦆 鸭肉：${d.duck.name}（${d.duck.cuisine}）\n`;
-    text += `  🐂 牛肉：${d.beef.name}（${d.beef.cuisine}）\n`;
-    text += `  🦐 虾：   ${d.shrimp.name}（${d.shrimp.cuisine}）\n`;
+    text += `  🥩 荤菜：\n`;
+    d.bigMeat.forEach(m => { text += `    ${MEAT_ICONS[m.meatType]} ${MEAT_LABELS[m.meatType]}：${m.name}（${m.cuisine}）\n`; });
+    d.otherMeat.forEach(m => { text += `    🐖 猪肉：${m.name}（${m.cuisine}）\n`; });
     text += `  🥬 素菜：${d.vegetables.map(v => v.name).join('、')}\n`;
     text += `  🥣 汤品：${d.soup.name}\n`;
     text += `  🍜 面食：${d.noodle.name}\n`;
