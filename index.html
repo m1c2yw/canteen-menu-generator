@@ -1110,10 +1110,17 @@ function generateWeeklyMenu(mondayDate) {
       ];
       localStorage.setItem('last_lamb_date', dateStr);
     } else {
-      otherMeatDishes = [
-        pools.otherMeat[otherIndices.otherMeat++],
-        pools.otherMeat[otherIndices.otherMeat++],
-      ];
+      let a = pools.otherMeat[otherIndices.otherMeat++];
+      let b = pools.otherMeat[otherIndices.otherMeat++];
+      // 同天避免同类食材（如两道排骨）
+      const SIMILAR_WORDS = ['排骨', '猪蹄', '扣肉', '肉丸', '肘子'];
+      const isSimilar = (x, y) => SIMILAR_WORDS.some(w => x.name.includes(w) && y.name.includes(w));
+      let swaps = 0;
+      while (isSimilar(a, b) && swaps < 5) {
+        b = pools.otherMeat[otherIndices.otherMeat++];
+        swaps++;
+      }
+      otherMeatDishes = [a, b];
     }
 
     const day = {
