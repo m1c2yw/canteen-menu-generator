@@ -23,6 +23,15 @@
     --radius: 12px;
   }
 
+  [data-theme="dark"] {
+    --bg: #1a1a2e;
+    --card-bg: #252540;
+    --text: #e8e8e8;
+    --text-secondary: #a0a0b8;
+    --border: #3a3a55;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -31,7 +40,25 @@
     color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
+    transition: background 0.3s, color 0.3s;
   }
+
+  [data-theme="dark"] .header {
+    background: linear-gradient(135deg, #8b1a1a, #a52828);
+  }
+  [data-theme="dark"] .btn-outline {
+    background: var(--card-bg);
+    color: var(--text);
+    border-color: var(--border);
+  }
+  [data-theme="dark"] .btn-outline:hover { border-color: #e74c3c; color: #e74c3c; }
+  [data-theme="dark"] .btn-ghost { color: var(--text-secondary); }
+  [data-theme="dark"] .btn-ghost:hover { background: var(--card-bg); }
+  [data-theme="dark"] .summary-item,
+  [data-theme="dark"] .day-card { background: var(--card-bg); }
+  [data-theme="dark"] .day-header { background: linear-gradient(135deg, #8b1a1a, #a04000); }
+  [data-theme="dark"] .day-header.weekend { background: linear-gradient(135deg, #a0501a, #b87020); }
+  [data-theme="dark"] .toast { background: #444; }
 
   /* ===== 顶部导航 ===== */
   .header {
@@ -198,7 +225,8 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   }
   .day-card.today {
-    ring: 2px solid #c0392b;
+    outline: 2px solid #c0392b;
+    outline-offset: -2px;
     box-shadow: 0 0 0 2px #c0392b, var(--shadow);
   }
 
@@ -347,6 +375,7 @@
       <span class="week-label" id="weekLabel">2026年 第22周</span>
       <button onclick="navigateWeek(1)" title="下一周">▶</button>
       <button onclick="goToCurrentWeek()" style="font-size:12px;width:auto;padding:0 12px;border-radius:16px;">本周</button>
+      <button onclick="toggleTheme()" id="themeBtn" style="font-size:14px;width:auto;padding:0 10px;border-radius:16px;" title="切换深色模式">🌙</button>
     </div>
   </div>
 </header>
@@ -359,6 +388,7 @@
     <button class="btn btn-primary" onclick="regenerateMenu()">🎲 重新生成菜单</button>
     <button class="btn btn-outline" onclick="printMenu()">🖨️ 打印菜单</button>
     <button class="btn btn-ghost" onclick="exportImage()">📷 导出图片</button>
+    <button class="btn btn-ghost" onclick="copyMenuText()">📋 复制菜单文本</button>
   </div>
 
   <!-- 统计 -->
@@ -831,10 +861,59 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2000);
 }
 
+/** 深色模式切换 */
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? null : 'dark';
+  if (next) {
+    html.setAttribute('data-theme', next);
+  } else {
+    html.removeAttribute('data-theme');
+  }
+  document.getElementById('themeBtn').textContent = next ? '☀️' : '🌙';
+  localStorage.setItem('menu_theme', next ?? 'light');
+}
+
+/** 初始化主题 */
+function initTheme() {
+  const saved = localStorage.getItem('menu_theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+}
+
+/** 复制菜单文本 */
+function copyMenuText() {
+  let text = `📋 食堂周菜单 (${formatDate(currentMonday)} ~ ${formatDate(new Date(currentMonday.getTime() + 6 * 86400000))})\n`;
+  text += '═'.repeat(40) + '\n\n';
+
+  currentMenu.forEach(day => {
+    const d = day.dishes;
+    text += `【${day.dayName} ${day.date.slice(5)}】\n`;
+    text += `  🐔 鸡肉：${d.chicken.name}（${d.chicken.cuisine}）\n`;
+    text += `  🦆 鸭肉：${d.duck.name}（${d.duck.cuisine}）\n`;
+    text += `  🐂 牛肉：${d.beef.name}（${d.beef.cuisine}）\n`;
+    text += `  🦐 虾：   ${d.shrimp.name}（${d.shrimp.cuisine}）\n`;
+    text += `  🥬 素菜：${d.vegetables.map(v => v.name).join('、')}\n`;
+    text += `  🥣 汤品：${d.soup.name}\n`;
+    text += `  🍜 面食：${d.noodle.name}\n`;
+    text += '\n';
+  });
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('菜单已复制到剪贴板 ✅');
+  }).catch(() => {
+    showToast('复制失败，请重试');
+  });
+}
+
 // ============================================================
 //  启动
 // ============================================================
 
+initTheme();
 render();
 </script>
 
