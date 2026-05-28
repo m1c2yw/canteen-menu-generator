@@ -925,8 +925,20 @@ function cuisineTagClass(dish) {
 //  8周冷却追踪（控制重复率 ≤20%）
 // ============================================================
 
+const CACHE_VERSION = 'v2';
 const HISTORY_WEEKS = 8;
 const HISTORY_KEY = 'dish_history';
+
+// 启动时清理旧版本缓存
+if (localStorage.getItem('cache_version') !== CACHE_VERSION) {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('menu_') || k === HISTORY_KEY)) keys.push(k);
+  }
+  keys.forEach(k => localStorage.removeItem(k));
+  localStorage.setItem('cache_version', CACHE_VERSION);
+}
 
 function getDishHistory() {
   try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '{}'); }
@@ -1019,7 +1031,14 @@ function generateWeeklyMenu(mondayDate) {
   const weekKey = formatDate(mondayDate);
 
   const cached = localStorage.getItem(`menu_${weekKey}`);
-  if (cached) return JSON.parse(cached);
+  if (cached) {
+    const parsed = JSON.parse(cached);
+    // 兼容旧格式（纯数组）→ 转为新格式
+    if (Array.isArray(parsed)) {
+      return { week: parsed, repeatRate: 0, generatedAt: weekKey };
+    }
+    return parsed;
+  }
 
   // 8周冷却：优先使用未出现的菜品
   const recentSet = getRecentDishSet();
