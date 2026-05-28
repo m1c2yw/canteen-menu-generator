@@ -1,0 +1,72 @@
+<view class="header">
+  <text class="title">食堂本周菜单</text>
+  <text class="sub">{{weekLabel}}</text>
+</view>
+
+<block wx:if="{{loading}}">
+  <view class="loading">加载中...</view>
+</block>
+
+<block wx:elif="{{error}}">
+  <view class="error">{{error}}</view>
+</block>
+
+<block wx:else>
+  <view class="menu-list">
+    <block wx:for="{{days}}" wx:key="date">
+      <view class="day-card {{item.isHoliday ? 'holiday' : ''}}">
+        <view class="day-header">
+          <text class="day-name">{{item.dayName}}</text>
+          <text class="day-date">{{item.dateStr}}</text>
+        </view>
+
+        <block wx:if="{{item.isHoliday}}">
+          <view class="holiday-notice">节假日休息</view>
+        </block>
+
+        <block wx:else>
+          <view class="day-body">
+            <view class="section">
+              <text class="section-label">🥩 大荤</text>
+              <view class="dish-row" wx:for="{{item.bigMeat}}" wx:for-item="m" wx:key="name">
+                <text class="dish-name">{{m.icon}} {{m.name}}</text>
+                <text class="dish-tag {{m.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{m.cuisine}}</text>
+              </view>
+            </view>
+
+            <view class="section">
+              <text class="section-label">🍖 其他荤</text>
+              <view class="dish-row" wx:for="{{item.otherMeat}}" wx:for-item="m" wx:key="name">
+                <text class="dish-name">{{m.name}}</text>
+                <text class="dish-tag {{m.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{m.cuisine}}</text>
+              </view>
+            </view>
+
+            <view class="divider"></view>
+
+            <view class="section">
+              <text class="section-label">🥬 素菜</text>
+              <view class="dish-row" wx:for="{{item.vegetables}}" wx:for-item="v" wx:key="name">
+                <text class="dish-name">{{v.name}}</text>
+                <text class="dish-tag {{v.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{v.cuisine}}</text>
+              </view>
+            </view>
+
+            <view class="divider"></view>
+
+            <view class="dish-row">
+              <text class="dish-name">🥣 {{item.soup.name}}</text>
+              <text class="dish-tag {{item.soup.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{item.soup.cuisine}}</text>
+            </view>
+            <view class="dish-row">
+              <text class="dish-name">🍜 {{item.noodle.name}}</text>
+              <text class="dish-tag {{item.noodle.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{item.noodle.cuisine}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+</block>
+
+<view class="footer">每日 4荤 3素 1汤 1面食</view>

@@ -1,0 +1,1482 @@
+{
+  "chicken": [
+    {
+      "name": "辣子鸡丁",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "宫保鸡丁",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "口水鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "椒麻鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "芋儿鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "小煎鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干锅鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "怪味鸡丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "棒棒鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "重庆辣子鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "姜爆鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "醋溜鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香菇滑鸡",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "葱油鸡",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "东安子鸡",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "板栗烧鸡",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "三杯鸡",
+      "cuisine": "赣菜"
+    }
+  ],
+  "duck": [
+    {
+      "name": "啤酒鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "魔芋烧鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "樟茶鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "子姜鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸菜鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干锅鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香酥鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "红烧鸭块",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "泡椒鸭掌",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酱爆鸭丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "仔姜鸭片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "麻辣鸭血",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "盐水鸭",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "姜母鸭",
+      "cuisine": "闽菜"
+    },
+    {
+      "name": "土匪鸭",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "腐竹烧鸭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "仔姜焖鸭",
+      "cuisine": "川菜"
+    }
+  ],
+  "beef": [
+    {
+      "name": "水煮牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干煸牛肉丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "小炒黄牛肉",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "红烧牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "粉蒸牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "夫妻肺片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "仔姜牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "泡椒牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "孜然牛肉",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "灯影牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "青椒牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香菜牛肉",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "葱爆牛肉",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "黑椒牛柳",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "土豆烧牛肉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "咖喱牛肉",
+      "cuisine": "东南亚"
+    },
+    {
+      "name": "陈皮牛肉",
+      "cuisine": "川菜"
+    }
+  ],
+  "shrimp": [
+    {
+      "name": "宫保虾球",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香辣虾",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干锅虾",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "鱼香大虾",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "蒜蓉开背虾",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "椒盐虾",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "泡椒虾仁",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "麻辣虾",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "水煮虾片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "韭香虾仁",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香辣盆盆虾",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸辣虾",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "油焖大虾",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "白灼虾",
+      "cuisine": "粤菜"
+    }
+  ],
+  "fish": [
+    {
+      "name": "水煮鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸菜鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "豆瓣鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干烧鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "泡椒鱼片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "麻辣鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "剁椒鱼头",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "红烧鱼块",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "糖醋鱼",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "清蒸鲈鱼",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "葱油鱼",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "豆腐鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香辣烤鱼",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "松鼠鱼",
+      "cuisine": "苏菜"
+    }
+  ],
+  "otherMeat": [
+    {
+      "name": "回锅肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "鱼香肉丝",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "水煮肉片",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "红烧肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "东坡肉",
+      "cuisine": "浙菜",
+      "protein": "pork"
+    },
+    {
+      "name": "粉蒸肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "锅包肉",
+      "cuisine": "东北菜",
+      "protein": "pork"
+    },
+    {
+      "name": "京酱肉丝",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "糖醋里脊",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "蒜泥白肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "盐煎肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "小炒肉",
+      "cuisine": "湘菜",
+      "protein": "pork"
+    },
+    {
+      "name": "梅菜扣肉",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "红烧排骨",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "糖醋排骨",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "干锅排骨",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "酱肉丝",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "木须肉",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "宫保肉丁",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "咕噜肉",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "叉烧肉",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "辣椒炒肉",
+      "cuisine": "湘菜",
+      "protein": "pork"
+    },
+    {
+      "name": "毛氏红烧肉",
+      "cuisine": "湘菜",
+      "protein": "pork"
+    },
+    {
+      "name": "樱桃肉",
+      "cuisine": "苏菜",
+      "protein": "pork"
+    },
+    {
+      "name": "溜肉段",
+      "cuisine": "东北菜",
+      "protein": "pork"
+    },
+    {
+      "name": "无锡排骨",
+      "cuisine": "苏菜",
+      "protein": "pork"
+    },
+    {
+      "name": "腊味合蒸",
+      "cuisine": "湘菜",
+      "protein": "pork"
+    },
+    {
+      "name": "脆皮烧肉",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "把子肉",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "酱骨架",
+      "cuisine": "东北菜",
+      "protein": "pork"
+    },
+    {
+      "name": "椒盐排骨",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "红烧狮子头",
+      "cuisine": "苏菜",
+      "protein": "pork"
+    },
+    {
+      "name": "可乐排骨",
+      "cuisine": "家常",
+      "protein": "pork"
+    },
+    {
+      "name": "红烧猪蹄",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "蒜香骨",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "腊肉炒蒜苗",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "爆炒腰花",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "南乳扣肉",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "走油肉",
+      "cuisine": "苏菜",
+      "protein": "pork"
+    },
+    {
+      "name": "合川肉片",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "泡椒猪肝",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "酱爆肉丁",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "葱爆肉",
+      "cuisine": "鲁菜",
+      "protein": "pork"
+    },
+    {
+      "name": "香辣猪蹄",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "粉蒸排骨",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "芋头蒸排骨",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "苦瓜炒肉",
+      "cuisine": "家常",
+      "protein": "pork"
+    },
+    {
+      "name": "洋葱炒肉",
+      "cuisine": "家常",
+      "protein": "pork"
+    },
+    {
+      "name": "四季豆炒肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "蒜薹肉丝",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "土豆烧排骨",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "糯米蒸排骨",
+      "cuisine": "湘菜",
+      "protein": "pork"
+    },
+    {
+      "name": "红烧大排",
+      "cuisine": "苏菜",
+      "protein": "pork"
+    },
+    {
+      "name": "孜然肉片",
+      "cuisine": "西北菜",
+      "protein": "pork"
+    },
+    {
+      "name": "茶树菇炒肉",
+      "cuisine": "湘菜",
+      "protein": "pork"
+    },
+    {
+      "name": "蒜苗回锅肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "尖椒肉丝",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "红烧肉丸",
+      "cuisine": "苏菜",
+      "protein": "pork"
+    },
+    {
+      "name": "蚝油肉片",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "萝卜烧肉",
+      "cuisine": "川菜",
+      "protein": "pork"
+    },
+    {
+      "name": "腐竹烧肉",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "香菇烧肉",
+      "cuisine": "家常",
+      "protein": "pork"
+    },
+    {
+      "name": "豆豉蒸排骨",
+      "cuisine": "粤菜",
+      "protein": "pork"
+    },
+    {
+      "name": "泡椒肉片",
+      "cuisine": "川菜",
+      "protein": "pork"
+    }
+  ],
+  "lamb": [
+    {
+      "name": "孜然羊肉",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "葱爆羊肉",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "红烧羊肉",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "手抓羊肉",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "羊肉汤锅",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "烤羊排",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "白切羊肉",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "黄焖羊肉",
+      "cuisine": "西北菜"
+    }
+  ],
+  "vegetable": [
+    {
+      "name": "麻婆豆腐",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "鱼香茄子",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干煸四季豆",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "炝炒土豆丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "虎皮青椒",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干锅花菜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "家常豆腐",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "素炒三丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干煸苦瓜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "素烧冬瓜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "炝炒藕片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸辣土豆丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "炝炒莲白",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "白油丝瓜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酱烧茄子",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "青椒土豆片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸辣蕨根粉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "蒜泥茄子",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干锅茶树菇",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "清炒西兰花",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蒜蓉空心菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蚝油生菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蒜蓉粉丝娃娃菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "清炒豆苗",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "番茄炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "凉拌黄瓜",
+      "cuisine": "家常"
+    },
+    {
+      "name": "醋溜白菜",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "地三鲜",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "剁椒蒸芋头",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "手撕包菜",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "韭菜炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "苦瓜炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "青椒炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "虾皮冬瓜",
+      "cuisine": "家常"
+    },
+    {
+      "name": "清炒莴笋",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "莴笋炒木耳",
+      "cuisine": "家常"
+    },
+    {
+      "name": "芹菜香干",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "酸辣白菜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "炒合菜",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "醋溜土豆丝",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "香菇油菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "白灼菜心",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "上汤娃娃菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蒜蓉菠菜",
+      "cuisine": "家常"
+    },
+    {
+      "name": "家常烧茄子",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "红烧腐竹",
+      "cuisine": "家常"
+    },
+    {
+      "name": "凉拌木耳",
+      "cuisine": "家常"
+    },
+    {
+      "name": "清炒山药",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "素炒豆芽",
+      "cuisine": "家常"
+    },
+    {
+      "name": "蚂蚁上树",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "西芹百合",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "松仁玉米",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "尖椒豆皮",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "红烧香菇",
+      "cuisine": "家常"
+    },
+    {
+      "name": "葱烧豆腐",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "糖醋莲白",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "清炒南瓜",
+      "cuisine": "家常"
+    },
+    {
+      "name": "蒜苗炒香干",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "蚝油杏鲍菇",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "干锅土豆片",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "蒜蓉蒸茄子",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "炝炒圆白菜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "泡椒木耳",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "蒸水蛋",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "剁椒蒸豆腐",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "番茄菜花",
+      "cuisine": "家常"
+    },
+    {
+      "name": "蒜蓉丝瓜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "酸豆角炒肉末",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "雪菜炒毛豆",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "榄菜四季豆",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "清炒芥蓝",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "白菜炖粉条",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "麻辣豆腐",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "咸蛋黄焗南瓜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蒜蓉蒸金针菇",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "凉拌三丝",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "素炒饼",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "干煸土豆条",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "番茄炒菜花",
+      "cuisine": "家常"
+    },
+    {
+      "name": "清炒荷兰豆",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蒜蓉秋葵",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "彩椒炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "韭菜炒香干",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "酸菜炒粉条",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "剁椒炒蛋",
+      "cuisine": "湘菜"
+    },
+    {
+      "name": "香椿炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "洋葱炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "虾皮炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "菠菜炒蛋",
+      "cuisine": "家常"
+    },
+    {
+      "name": "木耳炒山药",
+      "cuisine": "家常"
+    },
+    {
+      "name": "清炒芦笋",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "耗油生菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "蒜蓉油麦菜",
+      "cuisine": "家常"
+    },
+    {
+      "name": "炝炒芥菜",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "素炒茄子",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "孜然土豆",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "拔丝地瓜",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "金沙玉米",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "家常烧豆腐",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "香菇烧豆腐",
+      "cuisine": "家常"
+    },
+    {
+      "name": "锅塌豆腐",
+      "cuisine": "鲁菜"
+    },
+    {
+      "name": "鱼香豆腐",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "干锅千叶豆腐",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸辣豆花",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "清炒茼蒿",
+      "cuisine": "家常"
+    },
+    {
+      "name": "蒜蓉西兰花",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "白灼芥蓝",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "上汤菠菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "豆豉鲮鱼油麦菜",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "红烧素鸡",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "素烧鹅",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "炒三菇",
+      "cuisine": "家常"
+    },
+    {
+      "name": "西兰花炒木耳",
+      "cuisine": "家常"
+    },
+    {
+      "name": "腐竹烧木耳",
+      "cuisine": "家常"
+    },
+    {
+      "name": "凉拌海带丝",
+      "cuisine": "家常"
+    },
+    {
+      "name": "老虎菜",
+      "cuisine": "东北菜"
+    },
+    {
+      "name": "拍黄瓜",
+      "cuisine": "家常"
+    }
+  ],
+  "soup": [
+    {
+      "name": "酸菜粉丝汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "番茄蛋花汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "紫菜蛋花汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "豆腐青菜汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "黄瓜皮蛋汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "菌菇汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "三鲜汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "酸辣汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "豌豆尖汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "白菜豆腐汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "冬瓜汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "萝卜丝汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "海带汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "丝瓜汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "菠菜蛋花汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "西红柿豆腐汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "玉米羹",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "豆腐鱼头汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "莲藕汤",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "南瓜汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "萝卜丝鲫鱼汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "萝卜排骨汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "山药排骨汤",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "玉米排骨汤",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "平菇肉片汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "山药汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "老南瓜绿豆汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "榨菜肉丝汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "排骨莲藕汤",
+      "cuisine": "鄂菜"
+    },
+    {
+      "name": "酸萝卜老鸭汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "茶树菇鸡汤",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "虾皮紫菜汤",
+      "cuisine": "家常"
+    },
+    {
+      "name": "冬瓜丸子汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸菜豆腐汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "萝卜大骨汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "玉米浓汤",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "豆腐鱼汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "泡菜汤",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "蛋饺汤",
+      "cuisine": "苏菜"
+    }
+  ],
+  "noodle": [
+    {
+      "name": "担担面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "重庆小面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "宜宾燃面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "红油抄手",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸辣粉",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "鸡丝凉面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "甜水面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "钟水饺",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "锅贴",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "葱油饼",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "花卷",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "蛋炒饭",
+      "cuisine": "家常"
+    },
+    {
+      "name": "牛肉面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "酸菜肉丝面",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "炸酱面",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "热干面",
+      "cuisine": "鄂菜"
+    },
+    {
+      "name": "刀削面",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "油泼面",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "炒河粉",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "扬州炒饭",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "煲仔饭",
+      "cuisine": "粤菜"
+    },
+    {
+      "name": "韭菜盒子",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "臊子面",
+      "cuisine": "西北菜"
+    },
+    {
+      "name": "炒饼",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "灌汤包",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "小笼包",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "生煎包",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "红糖馒头",
+      "cuisine": "家常"
+    },
+    {
+      "name": "奶香馒头",
+      "cuisine": "家常"
+    },
+    {
+      "name": "蒸饺",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "煎饺",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "葱油拌面",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "阳春面",
+      "cuisine": "苏菜"
+    },
+    {
+      "name": "打卤面",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "炒面",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "炒刀削面",
+      "cuisine": "北方菜"
+    },
+    {
+      "name": "炒方便面",
+      "cuisine": "家常"
+    },
+    {
+      "name": "牛肉炒饭",
+      "cuisine": "川菜"
+    },
+    {
+      "name": "菠萝炒饭",
+      "cuisine": "东南亚"
+    },
+    {
+      "name": "蛋包饭",
+      "cuisine": "日式"
+    },
+    {
+      "name": "卤肉饭",
+      "cuisine": "闽菜"
+    },
+    {
+      "name": "盖浇饭",
+      "cuisine": "家常"
+    }
+  ]
+}

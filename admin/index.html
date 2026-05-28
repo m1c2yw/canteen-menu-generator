@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>饭点小站管理后台</title>
+<style>
+:root {
+  --bg: #f7f0e6; --card: #fffdf8; --text: #3c1e1e; --text2: #8b7355;
+  --border: #d4c5b2; --red: #8b1a1a; --gold: #b8943c; --green: #4a6b2a;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"STSong","Songti SC","Noto Serif SC","PingFang SC","Microsoft YaHei",serif; background:var(--bg); color:var(--text); min-height:100vh;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(139,26,26,0.03) 0%, transparent 70%); }
+
+.login-wrap { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+.login-card { background:var(--card); padding:44px; border:1px solid rgba(212,197,178,0.3); width:380px;
+  box-shadow:0 8px 32px rgba(139,26,26,0.08); }
+.login-card h2 { text-align:center; margin-bottom:28px; font-size:22px; color:var(--red); letter-spacing:4px; font-weight:900; }
+.login-card input { width:100%; padding:12px; margin-bottom:14px; border:1px solid #d4c5b2; font-size:14px; background:var(--card); font-family:inherit; }
+.login-card input:focus { border-color:var(--red); outline:none; box-shadow:0 0 0 2px rgba(139,26,26,0.08); }
+.login-card .error { color:var(--red); font-size:12px; margin-bottom:8px; }
+
+.header { background:linear-gradient(180deg,#6b1010,#8b1a1a); color:#f5deb3; padding:0 20px; display:flex; align-items:center; height:52px; gap:16px; border-bottom:2px solid var(--gold); position:sticky; top:0; z-index:10; }
+.header h1 { font-size:16px; white-space:nowrap; letter-spacing:2px; font-weight:900; }
+.btn-logout { margin-left:auto; padding:4px 14px; border:1px solid rgba(245,222,179,0.4); background:transparent; color:#f5deb3; cursor:pointer; font-size:12px; font-family:inherit; letter-spacing:1px; }
+
+.main { max-width:1300px; margin:0 auto; padding:20px; }
+.page { display:none; }
+.page.active { display:block; }
+
+.tab-btn { padding:6px 14px; border:none; background:rgba(255,255,255,0.08); color:#f5deb3; cursor:pointer; font-size:13px; white-space:nowrap; font-family:inherit; letter-spacing:1px; transition:all 0.2s; }
+.tab-btn:hover { background:rgba(255,255,255,0.15); }
+.tab-btn.active { background:var(--gold); color:#3c1e1e; font-weight:700; }
+
+.btn { padding:8px 18px; border:none; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s; font-family:inherit; letter-spacing:1px; }
+.btn-red { background:linear-gradient(180deg,#8b1a1a,#a02020); color:#f5deb3; }
+.btn-red:hover { background:#6b1010; }
+.btn-outline { background:var(--card); border:1px solid #d4c5b2; color:var(--text); }
+.btn-outline:hover { border-color:var(--red); color:var(--red); }
+.btn-sm { padding:5px 14px; font-size:12px; }
+
+/* 菜单 */
+.week-nav { display:flex; align-items:center; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+.week-nav button { min-width:32px;height:32px;border:1px solid #d4c5b2;background:var(--card);cursor:pointer;font-size:14px; color:var(--text); display:flex; align-items:center; justify-content:center; white-space:nowrap; }
+.week-nav .week-label { font-weight:700; font-size:14px; min-width:170px; text-align:center; letter-spacing:2px; }
+.menu-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+@media(max-width:1100px){.menu-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.menu-grid{grid-template-columns:repeat(2,1fr)}}
+.day-card { background:var(--card); overflow:hidden; box-shadow:0 2px 10px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.25); }
+.day-header { background:linear-gradient(90deg,#8b1a1a,#a02020); color:#f5deb3; padding:7px 10px; text-align:center; font-weight:700; font-size:12px; letter-spacing:1px; }
+.day-card.holiday .day-header { background:linear-gradient(90deg,#8b8378,#9b9388); }
+.day-body { padding:6px 8px 10px; }
+.dish-item { font-size:11px; padding:2px 4px; cursor:pointer; display:flex; justify-content:space-between; transition:background 0.15s; }
+.dish-item:hover { background:rgba(139,26,26,0.05); }
+.dish-cuisine { font-size:9px; color:var(--text2); flex-shrink:0; }
+.dish-group-label { font-size:10px; font-weight:700; color:var(--red); margin:5px 0 2px; padding-bottom:2px; border-bottom:1px dotted #d4c5b2; letter-spacing:1px; }
+.dish-group-label:first-child { margin-top:0; }
+.toolbar { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+
+/* 每日预订卡片 */
+.today-card { background:var(--card); padding:20px 24px; box-shadow:0 2px 12px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.25); max-width:500px; }
+
+/* 表格 */
+table { width:100%; border-collapse:collapse; background:var(--card); box-shadow:0 2px 10px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.25); }
+th,td { padding:10px 14px; text-align:left; font-size:13px; border-bottom:1px solid #e8ddd0; }
+th { background:#f7f0e6; font-weight:700; color:var(--red); letter-spacing:1px; }
+tr:hover td { background:rgba(247,240,230,0.4); }
+
+/* 弹窗 */
+.modal-overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(60,30,30,0.6);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s; }
+.modal-overlay.show { opacity:1;pointer-events:auto; }
+.modal-content { background:var(--card);max-width:620px;width:92%;max-height:70vh;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(139,26,26,0.15); border:1px solid rgba(212,197,178,0.3); }
+.modal-header { padding:14px 20px;border-bottom:1px solid #e8ddd0;display:flex;justify-content:space-between;align-items:center; }
+.modal-header h3 { font-size:15px; color:var(--red); letter-spacing:2px; }
+.modal-close { width:32px;height:32px;border:none;background:none;cursor:pointer;font-size:18px;color:var(--text2); }
+.modal-close:hover { color:var(--red); }
+.modal-body { padding:16px 20px;overflow-y:auto;flex:1; }
+.candidate-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:8px; }
+.candidate-item { padding:8px 12px;cursor:pointer;border:1px solid #d4c5b2;font-size:13px;display:flex;justify-content:space-between;background:var(--card); }
+.candidate-item:hover { border-color:var(--red);background:rgba(139,26,26,0.04); }
+.candidate-item.current { border-color:var(--red);background:rgba(139,26,26,0.06);font-weight:700; }
+
+.form-row { display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap; }
+.form-row input,.form-row select { padding:8px 12px;border:1px solid #d4c5b2;font-size:13px;background:var(--card);font-family:inherit; }
+.form-row input:focus,.form-row select:focus { border-color:var(--red);outline:none; }
+.filter-bar { display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center; }
+.filter-bar select { padding:6px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px; }
+.badge { display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:1px; }
+.badge-pending { background:#fdf0e0;color:#8b6914;border:1px solid #e8d5a0; }
+.badge-replied { background:#e8f0e0;color:#4a6b2a;border:1px solid #c0d8b0; }
+.placeholder { text-align:center; padding:80px 20px; color:var(--text2); font-size:16px; letter-spacing:2px; }
+.placeholder .picon { font-size:56px; display:block; margin-bottom:14px; }
+.toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#3c1e1e;color:#f5deb3;padding:10px 24px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;letter-spacing:1px; }
+.toast.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- 登录 -->
+<div id="loginPage" class="login-wrap">
+  <div class="login-card">
+    <h2>饭点小站管理后台</h2>
+    <div class="error" id="loginError"></div>
+    <input type="text" id="username" placeholder="用户名" onkeydown="if(event.key==='Enter')login()">
+    <input type="password" id="password" placeholder="密码" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn btn-red" style="width:100%;padding:12px;" onclick="login()">登 录</button>
+  </div>
+</div>
+
+<!-- 主应用 -->
+<div id="appPage" style="display:none;">
+  <header class="header" id="appHeader">
+    <h1 style="margin-right:16px;">饭点小站</h1>
+    <nav style="display:flex;gap:2px;flex:1;overflow-x:auto;">
+      <button class="tab-btn active" onclick="switchTab('menu')">本周菜单</button>
+      <button class="tab-btn" onclick="switchTab('today')">每日预订</button>
+      <button class="tab-btn" onclick="switchTab('meal')">餐食订购</button>
+      <button class="tab-btn" onclick="switchTab('shop')">商品订购</button>
+      <button class="tab-btn" onclick="switchTab('feedback')">意见箱</button>
+    </nav>
+    <button class="btn-logout" onclick="logout()">退出</button>
+  </header>
+  <main class="main">
+    <!-- 首页（已移除） -->
+
+    <!-- 本周菜单 -->
+    <div id="page-menu" class="page active">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" onclick="loadDishManage()">菜品库</button>
+          <button class="btn btn-outline btn-sm" onclick="loadHolidayManage()">节假日</button>
+        </div>
+        <div class="week-nav" style="margin-bottom:0;">
+          <button onclick="navWeek(-1)">&#9664;</button>
+          <span class="week-label" id="weekLabel"></span>
+          <button onclick="navWeek(1)">&#9654;</button>
+          <button class="btn btn-outline btn-sm" onclick="goCurrentWeek()">本周</button>
+          <button class="btn btn-red btn-sm" onclick="regenerateMenu()">重新生成</button>
+        </div>
+      </div>
+      <div id="menuSummary" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:var(--text2);"></div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- 每日预订 -->
+    <div id="page-today" class="page">
+      <div style="background:var(--card);padding:18px 20px;box-shadow:0 2px 12px rgba(139,26,26,0.04);border:1px solid rgba(212,197,178,0.25);max-width:500px;">
+        <h3 style="font-size:14px;color:var(--red);letter-spacing:2px;margin-bottom:14px;">每日主食供应设置</h3>
+        <div id="stapleWeekdays"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <select id="stapleWeekday" style="padding:7px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px;">
+            <option value="0">周一</option><option value="1">周二</option><option value="2">周三</option><option value="3">周四</option><option value="4">周五</option>
+          </select>
+          <input type="text" id="stapleName" placeholder="主食名称，如：包子" style="padding:7px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px;flex:1;min-width:140px;">
+          <button class="btn btn-red btn-sm" onclick="addStaple()">添加</button>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <h3 style="font-size:14px;color:var(--red);letter-spacing:2px;">预订记录</h3>
+          <input type="date" id="orderDateFilter" onchange="loadOrdersAdmin()" style="padding:6px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px;">
+        </div>
+        <div id="orderSummary" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;"></div>
+        <table><thead><tr><th>预订人</th><th>主食</th><th>数量</th><th>时间</th></tr></thead><tbody id="orderTableBody"></tbody></table>
+        <div id="orderEmpty" style="text-align:center;padding:30px;color:var(--text2);display:none;">暂无预订记录</div>
+      </div>
+    </div>
+
+    <!-- 餐食订购 -->
+    <div id="page-meal" class="page"><div class="placeholder"><span class="picon">🍱</span>餐食订购功能开发中</div></div>
+
+    <!-- 商品订购 -->
+    <div id="page-shop" class="page"><div class="placeholder"><span class="picon">🛒</span>商品订购功能开发中</div></div>
+
+    <!-- 意见箱 -->
+    <div id="page-feedback" class="page">
+      <div class="filter-bar">
+        <select id="fbStatusFilter" onchange="loadFeedbacks()"><option value="">全部状态</option><option value="pending">待回复</option><option value="replied">已回复</option></select>
+      </div>
+      <table><thead><tr><th>昵称</th><th>类型</th><th>内容</th><th>回复</th><th>时间</th><th>操作</th></tr></thead><tbody id="fbTableBody"></tbody></table>
+      <div id="fbReplyForm" style="display:none;margin-top:12px;padding:14px;background:var(--card);border:1px solid rgba(212,197,178,0.3);">
+        <div class="form-row">
+          <input type="text" id="fbReplyText" placeholder="输入回复" style="flex:1;">
+          <button class="btn btn-red btn-sm" onclick="submitReply()">回复</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('fbReplyForm').style.display='none'">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 菜品库（嵌入） -->
+    <div id="page-dishes" class="page">
+      <div class="filter-bar">
+        <select id="dishCatFilter" onchange="loadDishManage()">
+          <option value="">全部分类</option><option value="chicken">鸡肉</option><option value="duck">鸭肉</option><option value="beef">牛肉</option><option value="shrimp">虾</option><option value="fish">鱼</option><option value="otherMeat">猪肉/其他荤</option><option value="lamb">羊肉</option><option value="vegetable">素菜</option><option value="soup">汤</option><option value="noodle">面食</option>
+        </select>
+        <button class="btn btn-red btn-sm" onclick="showAddDish()">+ 添加菜品</button>
+      </div>
+      <div id="addDishForm" style="display:none;margin-bottom:14px;padding:14px;background:var(--card);border:1px solid rgba(212,197,178,0.3);">
+        <div class="form-row">
+          <input type="text" id="newDishName" placeholder="菜品名称">
+          <select id="newDishCat"><option value="chicken">鸡肉</option><option value="duck">鸭肉</option><option value="beef">牛肉</option><option value="shrimp">虾</option><option value="fish">鱼</option><option value="otherMeat">猪肉/其他荤</option><option value="lamb">羊肉</option><option value="vegetable">素菜</option><option value="soup">汤</option><option value="noodle">面食</option></select>
+          <input type="text" id="newDishCuisine" placeholder="菜系" style="width:80px;">
+          <button class="btn btn-red btn-sm" onclick="addDish()">添加</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('addDishForm').style.display='none'">取消</button>
+        </div>
+      </div>
+      <table><thead><tr><th>菜品</th><th>分类</th><th>菜系</th><th>状态</th><th>操作</th></tr></thead><tbody id="dishTableBody"></tbody></table>
+    </div>
+
+    <!-- 节假日（嵌入） -->
+    <div id="page-holidays" class="page">
+      <div class="form-row">
+        <input type="date" id="newHolidayDate"><input type="text" id="newHolidayName" placeholder="节假日名称" style="width:180px;">
+        <button class="btn btn-red btn-sm" onclick="addHoliday()">添加</button>
+      </div>
+      <table><thead><tr><th>日期</th><th>名称</th><th>操作</th></tr></thead><tbody id="holidayTableBody"></tbody></table>
+    </div>
+  </main>
+</div>
+
+<!-- 替换弹窗 -->
+<div class="modal-overlay" id="replaceModal" onclick="closeReplaceModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3 id="modalTitle">替换菜品</h3><button class="modal-close" onclick="closeReplaceModal()">&#10005;</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API = location.origin;
+let token = localStorage.getItem('admin_token');
+let currentMonday = getMonday(new Date());
+let currentMenuData = null;
+let replyFbId = null;
+
+function getMonday(d){const n=new Date(d);const day=n.getDay();const diff=n.getDate()-day+(day===0?-6:1);n.setDate(diff);return n;}
+function formatDate(d){return d.toISOString().slice(0,10);}
+function weekLabel(d){const dn=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const dayNum=dn.getUTCDay()||7;dn.setUTCDate(dn.getUTCDate()+4-dayNum);const ys=new Date(Date.UTC(dn.getUTCFullYear(),0,1));const w=Math.ceil((((dn-ys)/86400000)+1)/7);return d.getFullYear()+'年 第'+w+'周';}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+async function api(url,opts={}){const headers={'Content-Type':'application/json'};if(token)headers['Authorization']='Bearer '+token;const res=await fetch(API+url,{headers,...opts});if(res.status===401){logout();throw new Error('未登录');}return res.json();}
+
+if(token)showApp();
+
+async function login(){
+  const u=document.getElementById('username').value.trim(),p=document.getElementById('password').value;
+  if(!u||!p){document.getElementById('loginError').textContent='请输入用户名和密码';return;}
+  try{
+    const res=await fetch(API+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const data=await res.json();
+    if(!res.ok){document.getElementById('loginError').textContent=data.detail||'登录失败';return;}
+    token=data.access_token;localStorage.setItem('admin_token',token);showApp();
+  }catch(e){document.getElementById('loginError').textContent='无法连接服务器';}
+}
+function showApp(){document.getElementById('loginPage').style.display='none';document.getElementById('appPage').style.display='block';switchTab('menu');}
+function logout(){localStorage.removeItem('admin_token');token=null;document.getElementById('loginPage').style.display='flex';document.getElementById('appPage').style.display='none';}
+
+function switchTab(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const page=document.getElementById('page-'+name);
+  if(page)page.classList.add('active');
+  const btns=document.querySelectorAll('.tab-btn');
+  const names=['menu','today','meal','shop','feedback'];
+  const idx=names.indexOf(name);
+  if(idx>=0&&idx<btns.length)btns[idx].classList.add('active');
+  if(name==='menu')loadMenu();
+  if(name==='today'){loadStaplesAdmin();loadOrdersAdmin();}
+  if(name==='feedback')loadFeedbacks();
+  window.scrollTo(0,0);
+}
+
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(name==='dishes')loadDishes();
+  if(name==='holidays')loadHolidays();
+  window.scrollTo(0,0);
+}
+
+// 本周菜单
+async function loadMenu(){
+  const wk=formatDate(currentMonday);
+  document.getElementById('weekLabel').textContent=weekLabel(currentMonday);
+  try{const data=await api('/api/menus?week_key='+wk);currentMenuData=data;renderMenuGrid(data);}catch(e){document.getElementById('menuGrid').innerHTML='<p style="text-align:center;color:var(--text2);padding:40px;">加载失败</p>';}
+}
+function navWeek(d){currentMonday.setDate(currentMonday.getDate()+d*7);loadMenu();}
+function goCurrentWeek(){currentMonday=getMonday(new Date());loadMenu();}
+async function regenerateMenu(){
+  const wk=formatDate(currentMonday);
+  await api('/api/admin/menus/generate?week_key='+wk+'&force=true',{method:'POST'});
+  toast('已重新生成');loadMenu();
+}
+function renderMenuGrid(data){
+  if(!data||!data.days){document.getElementById('menuGrid').innerHTML='<p style="text-align:center;color:var(--text2);padding:40px;">无菜单数据，请点击"重新生成"</p>';document.getElementById('menuSummary').innerHTML='';return;}
+  const catLabel={chicken:'🐔',duck:'🦆',beef:'🐂',shrimp:'🦐',fish:'🐟',otherMeat:'🐖',lamb:'🐑'};
+
+  // 统计摘要
+  let sichuan=0,total=0,wdays=0;
+  data.days.forEach(day=>{if(day.is_holiday||!day.dishes)return;wdays++;const d=day.dishes;[d.bigMeat,d.otherMeat,d.vegetables,[d.soup,d.noodle]].flat().filter(Boolean).forEach(dish=>{total++;if(dish.cuisine==='川菜')sichuan++;});});
+  document.getElementById('menuSummary').innerHTML=`<span>📅 ${data.week_key} ~ ${data.days[data.days.length-1]?.date||''} · 工作日 <b>${wdays}</b> 天</span><span>🥢 共 <b>${total}</b> 道菜 </span><span style="color:${sichuan/total>0.5?'var(--red)':'var(--green)'}">川菜占比 <b>${Math.round(sichuan/total*100)}%</b></span><span style="color:${data.repeat_rate>20?'var(--red)':'var(--green)'}">8周重复率 <b>${data.repeat_rate}%</b></span>`;
+
+  document.getElementById('menuGrid').innerHTML=data.days.map((day,dayIdx)=>{
+    if(day.is_holiday)return`<div class="day-card holiday"><div class="day-header">${day.day_name} ${day.date.slice(5)}</div><div style="text-align:center;padding:24px;color:var(--text2);">节假日休息</div></div>`;
+    const d=day.dishes;if(!d)return'';
+    let html='';
+    if(d.bigMeat&&d.bigMeat.length){html+=`<div class="dish-group-label">🥩 荤菜</div>`;d.bigMeat.forEach((m,mi)=>html+=`<div class="dish-item" onclick="openReplace(${dayIdx},'${m.slot||'bigMeat_'+mi}','${m.name}','${m.category}')"><span>${catLabel[m.category]||''} ${m.name}</span><span class="dish-cuisine">${m.cuisine}</span></div>`);}
+    if(d.otherMeat&&d.otherMeat.length){html+=`<div class="dish-group-label">🍖 荤菜</div>`;d.otherMeat.forEach((m,mi)=>html+=`<div class="dish-item" onclick="openReplace(${dayIdx},'${m.slot||'otherMeat_'+mi}','${m.name}','${m.category}')"><span>${m.name}</span><span class="dish-cuisine">${m.cuisine}</span></div>`);}
+    if(d.vegetables&&d.vegetables.length){html+=`<div class="dish-group-label">🥬 素菜</div>`;d.vegetables.forEach((m,mi)=>html+=`<div class="dish-item" onclick="openReplace(${dayIdx},'vegetable_${mi}','${m.name}','vegetable')"><span>${m.name}</span><span class="dish-cuisine">${m.cuisine}</span></div>`);}
+    if(d.soup)html+=`<div class="dish-group-label">🥣 汤品</div><div class="dish-item" onclick="openReplace(${dayIdx},'soup','${d.soup.name}','soup')"><span>${d.soup.name}</span><span class="dish-cuisine">${d.soup.cuisine}</span></div>`;
+    if(d.noodle)html+=`<div class="dish-group-label">🍜 面食</div><div class="dish-item" onclick="openReplace(${dayIdx},'noodle','${d.noodle.name}','noodle')"><span>${d.noodle.name}</span><span class="dish-cuisine">${d.noodle.cuisine}</span></div>`;
+    return`<div class="day-card"><div class="day-header">${day.day_name} ${day.date.slice(5)}</div><div class="day-body">${html}</div></div>`;
+  }).join('');
+}
+
+// 替换弹窗
+let replaceInfo=null;
+async function openReplace(dayIdx,slot,oldName,category){
+  const day=currentMenuData.days[dayIdx];if(!day||day.is_holiday)return;
+  const dishes=await api('/api/dishes?category='+category);
+  const usedNames=new Set();const d=day.dishes;
+  if(d){[d.bigMeat,d.otherMeat,d.vegetables].flat().forEach(m=>{if(m)usedNames.add(m.name);});if(d.soup)usedNames.add(d.soup.name);if(d.noodle)usedNames.add(d.noodle.name);}
+  let candidates=dishes.filter(di=>!usedNames.has(di.name)||di.name===oldName);
+  candidates.sort((a,b)=>(a.name===oldName?1:0)-(b.name===oldName?1:0));
+  const catNames={chicken:'鸡肉',duck:'鸭肉',beef:'牛肉',shrimp:'虾',fish:'鱼',otherMeat:'猪肉/其他荤',lamb:'羊肉',vegetable:'素菜',soup:'汤',noodle:'面食'};
+  document.getElementById('modalTitle').textContent=`替换「${oldName}」→ ${catNames[category]||category}`;
+  document.getElementById('modalBody').innerHTML=`<div style="font-size:12px;color:var(--text2);margin-bottom:10px;">点击候选菜品完成替换</div><div class="candidate-grid">${candidates.map(di=>`<div class="candidate-item${di.name===oldName?' current':''}" onclick="confirmReplace(${dayIdx},'${slot}','${oldName.replace(/'/g,"\\'")}',${di.id},'${di.name.replace(/'/g,"\\'")}')">${di.name}<span style="font-size:10px;color:var(--text2)">${di.cuisine}</span></div>`).join('')}</div>`;
+  replaceInfo={dayIdx,slot,oldName};document.getElementById('replaceModal').classList.add('show');
+}
+async function confirmReplace(dayIdx,slot,oldName,newDishId,newName){
+  if(oldName===newName){closeReplaceModal();return;}
+  if(!currentMenuData||!currentMenuData.menu_id){toast('菜单数据错误');return;}
+  await api('/api/admin/menus/replace',{method:'PUT',body:JSON.stringify({menu_id:currentMenuData.menu_id,day_date:currentMenuData.days[dayIdx].date,slot,new_dish_id:newDishId})});
+  closeReplaceModal();loadMenu();toast(`已替换：${oldName} → ${newName}`);
+}
+function closeReplaceModal(e){if(e&&e.target!==document.getElementById('replaceModal'))return;document.getElementById('replaceModal').classList.remove('show');replaceInfo=null;}
+
+// 每日预订
+async function loadToday(){
+  const now=new Date(),dow=now.getDay();
+  if(dow===0||dow===6){document.getElementById('todayContent').innerHTML='<div class="placeholder"><span class="picon">🏖️</span>今天是周末，食堂休息</div>';return;}
+  const monday=getMonday(now),wk=formatDate(monday),todayStr=formatDate(now);
+  const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+  document.getElementById('todayLabel').textContent=todayStr+' '+dayNames[dow];
+  try{
+    const data=await api('/api/menus?week_key='+wk);
+    if(data.detail){document.getElementById('todayContent').innerHTML='<div class="placeholder">暂无今日菜单</div>';return;}
+    const today=data.days.find(d=>d.date===todayStr);
+    if(!today||today.is_holiday){document.getElementById('todayContent').innerHTML='<div class="placeholder">今日休息</div>';return;}
+    currentMenuData=data;
+    const catLabel={chicken:'🐔',duck:'🦆',beef:'🐂',shrimp:'🦐',fish:'🐟',otherMeat:'🐖',lamb:'🐑'};
+    const d=today.dishes,dayIdx=data.days.indexOf(today);
+    let html='';
+    if(d.bigMeat&&d.bigMeat.length){html+=`<div class="dish-group-label">🥩 荤菜</div>`;d.bigMeat.forEach((m,mi)=>html+=`<div class="dish-item" onclick="openReplace(${dayIdx},'${m.slot||'bigMeat_'+mi}','${m.name}','${m.category}')"><span>${catLabel[m.category]||''} ${m.name}</span><span class="dish-cuisine">${m.cuisine}</span></div>`);}
+    if(d.otherMeat&&d.otherMeat.length){html+=`<div class="dish-group-label">🍖 荤菜</div>`;d.otherMeat.forEach((m,mi)=>html+=`<div class="dish-item" onclick="openReplace(${dayIdx},'${m.slot||'otherMeat_'+mi}','${m.name}','${m.category}')"><span>${m.name}</span><span class="dish-cuisine">${m.cuisine}</span></div>`);}
+    if(d.vegetables&&d.vegetables.length){html+=`<div class="dish-group-label">🥬 素菜</div>`;d.vegetables.forEach((m,mi)=>html+=`<div class="dish-item" onclick="openReplace(${dayIdx},'vegetable_${mi}','${m.name}','vegetable')"><span>${m.name}</span><span class="dish-cuisine">${m.cuisine}</span></div>`);}
+    if(d.soup)html+=`<div class="dish-group-label">🥣 汤品</div><div class="dish-item" onclick="openReplace(${dayIdx},'soup','${d.soup.name}','soup')"><span>${d.soup.name}</span><span class="dish-cuisine">${d.soup.cuisine}</span></div>`;
+    if(d.noodle)html+=`<div class="dish-group-label">🍜 面食</div><div class="dish-item" onclick="openReplace(${dayIdx},'noodle','${d.noodle.name}','noodle')"><span>${d.noodle.name}</span><span class="dish-cuisine">${d.noodle.cuisine}</span></div>`;
+    document.getElementById('todayContent').innerHTML=`<div class="today-card">${html||'暂无菜品'}</div>`;
+  }catch(e){document.getElementById('todayContent').innerHTML='<div class="placeholder">加载失败</div>';}
+  loadStaplesAdmin();
+}
+
+// 主食管理
+async function loadStaplesAdmin(){
+  const data=await api('/api/admin/daily-staples');
+  const wdNames=['周一','周二','周三','周四','周五'];
+  let h='';
+  for(let i=0;i<5;i++){
+    const items=data[i]||[];
+    const tags=items.map(s=>`<span style="display:inline-flex;align-items:center;gap:4px;background:#f7f0e6;padding:3px 10px;font-size:13px;border:1px solid #d4c5b2;margin:3px;">${s.name}<button style="cursor:pointer;background:none;border:none;color:var(--red);font-size:14px;padding:0;line-height:1;" onclick="delStaple(${s.id})">&times;</button></span>`).join('');
+    h+=`<div style="margin-bottom:8px;"><b style="font-size:13px;display:inline-block;width:42px;">${wdNames[i]}</b>${tags||'<span style="color:var(--text2);font-size:12px;">未设置</span>'}</div>`;
+  }
+  document.getElementById('stapleWeekdays').innerHTML=h;
+}
+async function addStaple(){
+  const wd=document.getElementById('stapleWeekday').value;
+  const name=document.getElementById('stapleName').value.trim();
+  if(!name){toast('请输入主食名称');return;}
+  await api('/api/admin/daily-staples?weekday='+wd+'&name='+encodeURIComponent(name),{method:'POST'});
+  document.getElementById('stapleName').value='';
+  loadStaplesAdmin();toast('已添加');
+}
+async function delStaple(id){
+  await api('/api/admin/daily-staples/'+id,{method:'DELETE'});
+  loadStaplesAdmin();toast('已删除');
+}
+
+// 预订记录
+async function loadOrdersAdmin(){
+  const dateEl=document.getElementById('orderDateFilter');
+  if(!dateEl.value){const t=new Date();dateEl.value=[t.getFullYear(),String(t.getMonth()+1).padStart(2,'0'),String(t.getDate()).padStart(2,'0')].join('-');}
+  const dateStr=dateEl.value;
+  try{
+    const items=await api('/api/admin/daily-orders?date_str='+dateStr);
+    if(!items.length){
+      document.getElementById('orderTableBody').innerHTML='';
+      document.getElementById('orderSummary').innerHTML='';
+      document.getElementById('orderEmpty').style.display='block';
+      return;
+    }
+    document.getElementById('orderEmpty').style.display='none';
+    // 汇总
+    const summary={};
+    let total=0;
+    items.forEach(o=>{summary[o.staple_name]=(summary[o.staple_name]||0)+o.quantity;total+=o.quantity;});
+    document.getElementById('orderSummary').innerHTML='<span>预订总量 <b style="color:var(--red);">'+total+'</b></span>'+Object.entries(summary).map(([k,v])=>'<span>'+k+' <b>'+v+'</b></span>').join('');
+    // 表格
+    document.getElementById('orderTableBody').innerHTML=items.map(o=>`<tr><td>${o.customer_name}</td><td>${o.staple_name}</td><td>${o.quantity}</td><td>${o.created_at?o.created_at.slice(11,16):''}</td></tr>`).join('');
+  }catch(e){}
+}
+
+// 意见箱
+async function loadFeedbacks(){
+  const st=document.getElementById('fbStatusFilter').value;
+  const items=await api('/api/admin/feedbacks'+(st?'?status='+st:''));
+  const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML;};
+  const typeNames={suggestion:'建议',complaint:'投诉',praise:'表扬'};
+  document.getElementById('fbTableBody').innerHTML=items.map(f=>`<tr><td>${esc(f.nickname)}</td><td>${esc(typeNames[f.type]||f.type)}</td><td>${esc(f.content)}</td><td>${f.reply?esc(f.reply):'<span style="color:var(--text2)">未回复</span>'}</td><td>${f.created_at?f.created_at.slice(0,10):''}</td><td>${!f.reply?`<button class="btn btn-red btn-sm" onclick="showReply(${f.id})">回复</button>`:`<span class="badge badge-replied">已回复</span>`}</td></tr>`).join('');
+}
+function showReply(id){replyFbId=id;document.getElementById('fbReplyForm').style.display='block';}
+async function submitReply(){
+  const text=document.getElementById('fbReplyText').value.trim();if(!text)return;
+  await api('/api/admin/feedbacks/'+replyFbId+'/reply',{method:'PUT',body:JSON.stringify({reply:text})});
+  document.getElementById('fbReplyText').value='';document.getElementById('fbReplyForm').style.display='none';
+  loadFeedbacks();toast('已回复');
+}
+
+// 菜品库
+function loadDishManage(){goPage('dishes');loadDishes();}
+async function loadDishes(){
+  const cat=document.getElementById('dishCatFilter').value;
+  const dishes=await api('/api/admin/dishes'+(cat?'?category='+cat:''));
+  const labels={chicken:'鸡肉',duck:'鸭肉',beef:'牛肉',shrimp:'虾',fish:'鱼',otherMeat:'猪肉/其他荤',lamb:'羊肉',vegetable:'素菜',soup:'汤',noodle:'面食'};
+  document.getElementById('dishTableBody').innerHTML=dishes.map(d=>`<tr><td>${d.name}</td><td>${labels[d.category]||d.category}</td><td>${d.cuisine}</td><td>${d.enabled?'启用':'禁用'}</td><td><button class="btn btn-outline btn-sm" onclick="editDish(${d.id},'${d.name}','${d.category}','${d.cuisine}')">编辑</button> <button class="btn btn-outline btn-sm" onclick="toggleDish(${d.id},${d.enabled})">${d.enabled?'禁用':'启用'}</button></td></tr>`).join('');
+}
+function showAddDish(){document.getElementById('addDishForm').style.display='block';}
+async function addDish(){
+  const name=document.getElementById('newDishName').value.trim(),cat=document.getElementById('newDishCat').value,cuisine=document.getElementById('newDishCuisine').value.trim()||'家常';
+  if(!name)return;
+  await api('/api/admin/dishes',{method:'POST',body:JSON.stringify({name,category:cat,cuisine,protein:''})});
+  document.getElementById('newDishName').value='';document.getElementById('newDishCuisine').value='';
+  document.getElementById('addDishForm').style.display='none';loadDishes();toast('菜品已添加');
+}
+async function editDish(id,name,cat,cuisine){
+  const nn=prompt('菜品名称',name);if(!nn)return;
+  const nc=prompt('分类',cat);if(!nc)return;
+  const ncu=prompt('菜系',cuisine);if(!ncu)return;
+  await api('/api/admin/dishes/'+id,{method:'PUT',body:JSON.stringify({name:nn,category:nc,cuisine:ncu})});
+  loadDishes();toast('已更新');
+}
+async function toggleDish(id,enabled){await api('/api/admin/dishes/'+id,{method:'PUT',body:JSON.stringify({enabled:enabled?0:1})});loadDishes();toast(enabled?'已禁用':'已启用');}
+
+// 节假日
+function loadHolidayManage(){goPage('holidays');loadHolidays();}
+async function loadHolidays(){
+  const items=await api('/api/admin/holidays');
+  document.getElementById('holidayTableBody').innerHTML=items.map(h=>`<tr><td>${h.date}</td><td>${h.name}</td><td><button class="btn btn-outline btn-sm" onclick="deleteHoliday('${h.date}')">删除</button></td></tr>`).join('');
+}
+async function addHoliday(){
+  const dt=document.getElementById('newHolidayDate').value,name=document.getElementById('newHolidayName').value.trim();
+  if(!dt||!name)return;
+  await api('/api/admin/holidays',{method:'POST',body:JSON.stringify({date:dt,name})});
+  document.getElementById('newHolidayDate').value='';document.getElementById('newHolidayName').value='';loadHolidays();toast('已添加');
+}
+async function deleteHoliday(date){await api('/api/admin/holidays/'+date,{method:'DELETE'});loadHolidays();toast('已删除');}
+</script>
+</body>
+</html>

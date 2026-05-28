@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>饭点小站</title>
+<style>
+:root {
+  --bg: #f7f0e6; --card: #fffdf8; --text: #3c1e1e; --text2: #8b7355;
+  --border: #d4c5b2; --red: #8b1a1a; --gold: #b8943c;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"STSong","Songti SC","Noto Serif SC","PingFang SC","Microsoft YaHei",serif; background:var(--bg); color:var(--text); min-height:100vh;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(139,26,26,0.03) 0%, transparent 70%); }
+
+.header { background:linear-gradient(180deg,#6b1010,#8b1a1a,#a02020); color:#fff; padding:18px 20px; text-align:center; position:sticky; top:0; z-index:10;
+  border-bottom:3px solid var(--gold); box-shadow:0 2px 16px rgba(139,26,26,0.2); display:flex; align-items:center; justify-content:center; }
+.header h1 { font-size:20px; letter-spacing:4px; font-weight:900; }
+.header .back-btn { position:absolute; left:0; top:50%;transform:translateY(-50%); background:none; border:none; color:#f5deb3; font-size:15px; cursor:pointer; padding:8px 12px; font-family:inherit; letter-spacing:1px; opacity:0.85; }
+
+.page { display:none; }
+.page.active { display:block; }
+
+/* 导航首页 */
+.nav-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:24px 16px; max-width:400px; margin:0 auto; }
+.nav-grid .nav-card:last-child:nth-child(odd) { grid-column:1/-1; max-width:50%; margin:0 auto; }
+.nav-card { background:var(--card); text-align:center; padding:28px 16px; cursor:pointer; border:1px solid rgba(212,197,178,0.3);
+  box-shadow:0 4px 16px rgba(139,26,26,0.05); transition:all 0.2s; }
+.nav-card:active { transform:scale(0.97); background:#fdf5ed; }
+.nav-card .icon { font-size:36px; display:block; margin-bottom:8px; }
+.nav-card .label { font-size:14px; font-weight:700; color:var(--red); letter-spacing:2px; }
+.nav-card .hint { font-size:10px; color:var(--text2); margin-top:3px; }
+
+/* 菜单页 */
+.menu-list { padding:12px 14px; display:flex; flex-direction:column; gap:12px; }
+.day-card { background:var(--card); overflow:hidden; box-shadow:0 2px 12px rgba(139,26,26,0.06), 0 0 0 1px rgba(180,150,120,0.15); }
+.day-header { background:linear-gradient(90deg,#8b1a1a,#a02020); color:#f5deb3; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--gold); }
+.day-card.holiday .day-header { background:linear-gradient(90deg,#8b8378,#9b9388); color:#e8e0d0; border-bottom:1px solid #c0b8a8; }
+.day-name { font-weight:700; font-size:15px; letter-spacing:2px; }
+.day-date { font-size:11px; opacity:0.7; }
+.day-body { padding:14px 16px; }
+.dish-section { margin-bottom:10px; }
+.dish-section:last-child { margin-bottom:0; }
+.section-label { font-size:11px; font-weight:700; color:var(--red); margin-bottom:5px; padding-bottom:4px; border-bottom:1px dotted #d4c5b2; letter-spacing:1px; }
+.dish-row { font-size:14px; padding:4px 0; display:flex; justify-content:space-between; align-items:center; }
+.dish-row + .dish-row { border-top:1px dotted rgba(212,197,178,0.4); }
+.dish-tag { font-size:10px; padding:2px 6px; letter-spacing:1px; }
+.tag-sichuan { background:#fdf0ed; color:#8b1a1a; border:1px solid #e8c8c0; }
+.tag-other { background:#f5efe6; color:#8b7355; border:1px solid #d4c5b2; }
+.divider { border:none; border-top:1px solid #e8ddd0; margin:8px 0; }
+.holiday-notice { text-align:center; padding:28px; color:var(--text2); font-size:15px; letter-spacing:2px; }
+.week-nav-row { display:flex; align-items:center; justify-content:center; gap:16px; padding:14px 16px 8px; }
+.week-nav-row span { font-weight:700; letter-spacing:2px; font-size:14px; }
+.week-nav-row button { width:32px;height:32px;border:1px solid #d4c5b2;background:var(--bg);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center; }
+.btn-refresh { border:1px solid #d4c5b2;background:var(--bg);color:var(--text);padding:4px 12px;font-size:13px;cursor:pointer;font-family:inherit;letter-spacing:1px; }
+.menu-summary { display:flex; justify-content:center; gap:18px; padding:4px 16px 10px; font-size:11px; color:var(--text2); letter-spacing:1px; }
+.menu-summary b { color:var(--red); }
+
+/* 意见箱 */
+.fb-form { padding:0 16px; }
+.fb-form input,.fb-form select,.fb-form textarea { width:100%; padding:12px; border:1px solid #d4c5b2; font-size:14px; margin-bottom:12px; background:var(--card); color:var(--text); font-family:inherit; }
+.fb-form textarea { height:120px; resize:vertical; }
+.fb-form input:focus,.fb-form select:focus,.fb-form textarea:focus { border-color:var(--red); outline:none; box-shadow:0 0 0 2px rgba(139,26,26,0.08); }
+.btn-submit { width:100%; padding:14px; background:linear-gradient(180deg,#8b1a1a,#a02020); color:#f5deb3; border:none; font-size:15px; font-weight:700; cursor:pointer; letter-spacing:2px; font-family:inherit; }
+.btn-submit:active { background:#6b1010; }
+.fb-list { padding:0 16px; display:flex; flex-direction:column; gap:10px; }
+.fb-card { background:var(--card); padding:14px; box-shadow:0 1px 6px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.3); }
+.fb-card .meta { display:flex; justify-content:space-between; font-size:11px; color:var(--text2); margin-bottom:6px; }
+.fb-card .content { font-size:14px; margin-bottom:6px; }
+.fb-card .reply { background:rgba(247,240,230,0.6); padding:8px 12px; font-size:13px; color:var(--text2); border-left:3px solid var(--gold); }
+.badge { display:inline-block; padding:2px 8px; font-size:10px; letter-spacing:1px; }
+.badge-pending { background:#fdf0e0; color:#8b6914; border:1px solid #e8d5a0; }
+.badge-replied { background:#e8f0e0; color:#4a6b2a; border:1px solid #c0d8b0; }
+
+/* 占位页 */
+.placeholder { text-align:center; padding:80px 20px; }
+.placeholder .icon { font-size:60px; display:block; margin-bottom:16px; }
+.placeholder .msg { font-size:16px; color:var(--text2); letter-spacing:2px; }
+
+.toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#3c1e1e;color:#f5deb3;padding:10px 24px;font-size:13px;z-index:99;opacity:0;transition:opacity 0.3s;pointer-events:none;letter-spacing:1px; }
+.toast.show { opacity:1; }
+.empty { text-align:center; padding:40px; color:var(--text2); letter-spacing:1px; }
+
+/* 弹窗 */
+.modal-overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(60,30,30,0.5);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s; }
+.modal-overlay.show { opacity:1;pointer-events:auto; }
+.modal-card { background:var(--card);width:280px;padding:24px 20px 20px;text-align:center;box-shadow:0 8px 32px rgba(139,26,26,0.2);border:1px solid rgba(212,197,178,0.4); }
+.modal-card h3 { font-size:15px;color:var(--red);margin-bottom:14px;letter-spacing:2px; }
+.modal-card input { width:100%;padding:10px 12px;border:1px solid #d4c5b2;font-size:14px;text-align:center;background:var(--card);font-family:inherit;letter-spacing:1px; }
+.modal-card input:focus { border-color:var(--red);outline:none; }
+.modal-card .btn-confirm { width:100%;margin-top:12px;padding:10px;background:linear-gradient(180deg,#8b1a1a,#a02020);color:#f5deb3;border:none;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:2px;font-family:inherit; }
+</style>
+</head>
+<body>
+
+<!-- 导航首页 -->
+<div id="page-home" class="page active">
+  <header class="header"><h1>饭点小站</h1></header>
+  <div class="nav-grid">
+    <div class="nav-card" onclick="goPage('menu')">
+      <span class="icon">📋</span>
+      <span class="label">本周菜单</span>
+      <span class="hint">查看每日菜品</span>
+    </div>
+    <div class="nav-card" onclick="goPage('today')">
+      <span class="icon">🍽️</span>
+      <span class="label">每日预订</span>
+      <span class="hint">看看今天吃什么</span>
+    </div>
+    <div class="nav-card" onclick="goPage('meal')">
+      <span class="icon">🍱</span>
+      <span class="label">餐食订购</span>
+      <span class="hint">敬请期待</span>
+    </div>
+    <div class="nav-card" onclick="goPage('shop')">
+      <span class="icon">🛒</span>
+      <span class="label">商品订购</span>
+      <span class="hint">敬请期待</span>
+    </div>
+    <div class="nav-card" onclick="goPage('feedback')">
+      <span class="icon">📝</span>
+      <span class="label">意见箱</span>
+      <span class="hint">投诉建议表扬</span>
+    </div>
+  </div>
+</div>
+
+<!-- 每日预订 -->
+<div id="page-today" class="page">
+  <header class="header">
+    <button class="back-btn" onclick="goPage('home')">&#12296; 首页</button>
+    <h1>每日预订</h1>
+  </header>
+  <div style="text-align:center;padding:12px;font-weight:700;letter-spacing:2px;color:var(--text2);" id="todayLabel"></div>
+  <div style="padding:0 14px;" id="todayForm" class="fb-form">
+    <div id="todayContent"></div>
+    <button class="btn-submit" id="orderNextBtn" onclick="showNameStep()" style="display:none;">下一步</button>
+    <div id="orderResult" style="text-align:center;padding:16px;color:var(--red);font-weight:700;display:none;"></div>
+  </div>
+</div>
+
+<!-- 本周菜单 -->
+<div id="page-menu" class="page">
+  <header class="header">
+    <button class="back-btn" onclick="goPage('home')">&#12296; 首页</button>
+    <h1>本周菜单</h1>
+  </header>
+  <div class="week-nav-row">
+    <span id="weekLabel"></span>
+  </div>
+  <div class="menu-summary" id="menuSummary"></div>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<!-- 意见箱 -->
+<div id="page-feedback" class="page">
+  <header class="header">
+    <button class="back-btn" onclick="goPage('home')">&#12296; 首页</button>
+    <h1>意见箱</h1>
+  </header>
+  <div style="padding-top:16px;">
+    <div class="fb-form">
+      <input type="text" id="fbNickname" placeholder="你的昵称（选填）">
+      <select id="fbType"><option value="suggestion">建议</option><option value="complaint">投诉</option><option value="praise">表扬</option></select>
+      <textarea id="fbContent" placeholder="请描述你的建议或投诉..."></textarea>
+      <button class="btn-submit" onclick="submitFeedback()">提交反馈</button>
+    </div>
+    <div style="padding:16px;display:flex;gap:10px;">
+      <input type="text" id="fbSearchNick" placeholder="输入昵称查我的反馈" style="flex:1;padding:10px;border:1px solid #d4c5b2;font-size:14px;background:var(--card);color:var(--text);font-family:inherit;">
+      <button class="btn-submit" style="width:auto;padding:8px 16px;" onclick="loadMyFeedbacks()">查询</button>
+    </div>
+    <div class="fb-list" id="fbList"></div>
+  </div>
+</div>
+
+<!-- 餐食订购（占位） -->
+<div id="page-meal" class="page">
+  <header class="header">
+    <button class="back-btn" onclick="goPage('home')">&#12296; 首页</button>
+    <h1>餐食订购</h1>
+  </header>
+  <div class="placeholder">
+    <span class="icon">🍱</span>
+    <span class="msg">功能开发中，敬请期待</span>
+  </div>
+</div>
+
+<!-- 商品订购（占位） -->
+<div id="page-shop" class="page">
+  <header class="header">
+    <button class="back-btn" onclick="goPage('home')">&#12296; 首页</button>
+    <h1>商品订购</h1>
+  </header>
+  <div class="placeholder">
+    <span class="icon">🛒</span>
+    <span class="msg">功能开发中，敬请期待</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="nameModal">
+  <div class="modal-card">
+    <h3>确认预订</h3>
+    <input type="text" id="orderName" placeholder="请输入你的姓名">
+    <button class="btn-confirm" onclick="submitOrder()">确认预订</button>
+  </div>
+</div>
+
+<script>
+const API = location.origin;
+function getMonday(d){const n=new Date(d);const day=n.getDay();const diff=n.getDate()-day+(day===0?-6:1);n.setDate(diff);return n;}
+function weekLabel(d){const dn=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const dayNum=dn.getUTCDay()||7;dn.setUTCDate(dn.getUTCDate()+4-dayNum);const ys=new Date(Date.UTC(dn.getUTCFullYear(),0,1));const w=Math.ceil((((dn-ys)/86400000)+1)/7);return d.getFullYear()+'年 第'+w+'周';}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+
+// 页面导航
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(name==='menu')loadMenu();
+  if(name==='today')loadToday();
+  window.scrollTo(0,0);
+}
+
+// 每日预订
+let todayItems=[];
+
+async function loadToday(){
+  const now=new Date();
+  const dow=now.getDay();
+  const todayStr=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+  const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+  document.getElementById('todayLabel').textContent=todayStr+' '+dayNames[dow];
+  document.getElementById('orderNextBtn').style.display='none';
+  document.getElementById('orderResult').style.display='none';
+  document.getElementById('nameModal').classList.remove('show');
+  if(dow===0||dow===6){
+    document.getElementById('todayContent').innerHTML='<div class="empty">周末不供应主食</div>';
+    return;
+  }
+  try{
+    const res=await fetch(API+'/api/daily-staples');
+    const data=await res.json();
+    const wd=dow-1;
+    todayItems=data[wd]||[];
+    if(!todayItems.length){
+      document.getElementById('todayContent').innerHTML='<div class="empty">今日暂无主食供应</div>';
+      return;
+    }
+    document.getElementById('orderNextBtn').style.display='block';
+    document.getElementById('todayContent').innerHTML=
+      `<div class="day-card"><div class="day-header">今日主食</div><div class="day-body">`+
+      todayItems.map((s,i)=>`<div class="dish-row" style="font-size:15px;padding:8px 0;">
+        <span>${s.name}</span>
+        <span style="display:flex;align-items:center;gap:8px;">
+          <button onclick="chgQty(${i},-1)" style="width:28px;height:28px;border:1px solid #d4c5b2;background:var(--bg);font-size:16px;cursor:pointer;line-height:1;">-</button>
+          <span id="qty${i}" style="min-width:20px;text-align:center;">0</span>
+          <button onclick="chgQty(${i},1)" style="width:28px;height:28px;border:1px solid #d4c5b2;background:var(--bg);font-size:16px;cursor:pointer;line-height:1;">+</button>
+        </span>
+      </div>`).join('')+
+      `</div></div>`;
+  }catch(e){document.getElementById('todayContent').innerHTML='<div class="empty">加载失败</div>';}
+}
+
+function chgQty(i,d){
+  const el=document.getElementById('qty'+i);
+  let v=parseInt(el.textContent)+d;
+  if(v<0)v=0;
+  el.textContent=v;
+}
+
+function showNameStep(){
+  const items=[];
+  todayItems.forEach((s,i)=>{
+    const qty=parseInt(document.getElementById('qty'+i).textContent);
+    if(qty>0)items.push(s.name+' x'+qty);
+  });
+  if(!items.length){toast('请选择数量');return;}
+  document.getElementById('nameModal').classList.add('show');
+  document.getElementById('orderName').value='';
+  document.getElementById('orderName').focus();
+}
+
+async function submitOrder(){
+  const name=document.getElementById('orderName').value.trim();
+  if(!name){toast('请输入姓名');return;}
+  const items=[];
+  todayItems.forEach((s,i)=>{
+    const qty=parseInt(document.getElementById('qty'+i).textContent);
+    if(qty>0)items.push({staple_id:s.id,quantity:qty});
+  });
+  await fetch(API+'/api/daily-orders?customer_name='+encodeURIComponent(name)+'&orders='+encodeURIComponent(JSON.stringify(items)),{method:'POST'});
+  document.getElementById('nameModal').classList.remove('show');
+  document.getElementById('orderResult').style.display='block';
+  document.getElementById('orderResult').textContent='预订成功！';
+  setTimeout(()=>{document.getElementById('orderResult').style.display='none';},3000);
+}
+
+// 菜单
+
+async function loadMenu(){
+  const monday = getMonday(new Date());
+  const wk=[monday.getFullYear(),String(monday.getMonth()+1).padStart(2,'0'),String(monday.getDate()).padStart(2,'0')].join('-');
+  document.getElementById('weekLabel').textContent=weekLabel(monday);
+  try{
+    const res=await fetch(API+'/api/menus?week_key='+wk);
+    const data=await res.json();
+    if(data.detail){document.getElementById('menuList').innerHTML='<div class="empty">该周暂无菜单</div>';return;}
+    renderMenu(data);
+  }catch(e){document.getElementById('menuList').innerHTML='<div class="empty">加载失败</div>';}
+}
+function renderMenu(data){
+  const tag=dish=>dish.cuisine==='川菜'?'tag-sichuan':'tag-other';
+  // 统计摘要
+  let sichuan=0,total=0,wdays=0;
+  data.days.forEach(day=>{if(day.is_holiday||!day.dishes)return;wdays++;const d=day.dishes;[d.bigMeat,d.otherMeat,d.vegetables,[d.soup,d.noodle]].flat().filter(Boolean).forEach(dish=>{total++;if(dish.cuisine==='川菜')sichuan++;});});
+  document.getElementById('menuSummary').innerHTML=`<span>工作日 <b>${wdays}</b> 天</span><span>共 <b>${total}</b> 道菜</span><span>川菜 <b>${Math.round(sichuan/total*100)}%</b></span>`;
+
+  document.getElementById('menuList').innerHTML=data.days.map(day=>{
+    if(day.is_holiday)return`<div class="day-card holiday"><div class="day-header"><span class="day-name">${day.day_name}</span><span class="day-date">${day.date.slice(5)}</span></div><div class="holiday-notice">节假日休息</div></div>`;
+    const d=day.dishes;if(!d)return'';
+    let h='';
+    const allMeat=[...(d.bigMeat||[]),...(d.otherMeat||[])];
+    if(allMeat.length)h+=`<div class="dish-section"><div class="section-label">🥩 荤菜</div>${allMeat.map(m=>`<div class="dish-row"><span>${m.name}</span><span class="dish-tag ${tag(m)}">${m.cuisine}</span></div>`).join('')}</div>`;
+    if(d.vegetables&&d.vegetables.length)h+=`<hr class="divider"><div class="dish-section"><div class="section-label">🥬 素菜</div>${d.vegetables.map(v=>`<div class="dish-row"><span>${v.name}</span><span class="dish-tag ${tag(v)}">${v.cuisine}</span></div>`).join('')}</div>`;
+    if(d.soup)h+=`<hr class="divider"><div class="dish-section"><div class="section-label">🥣 汤品</div><div class="dish-row"><span>${d.soup.name}</span><span class="dish-tag ${tag(d.soup)}">${d.soup.cuisine}</span></div></div>`;
+    if(d.noodle)h+=`<div class="dish-section"><div class="section-label">🍜 面食</div><div class="dish-row"><span>${d.noodle.name}</span><span class="dish-tag ${tag(d.noodle)}">${d.noodle.cuisine}</span></div></div>`;
+    return`<div class="day-card"><div class="day-header"><span class="day-name">${day.day_name}</span><span class="day-date">${day.date.slice(5)}</span></div><div class="day-body">${h}</div></div>`;
+  }).join('');
+}
+
+// 意见箱
+async function submitFeedback(){
+  const nickname=document.getElementById('fbNickname').value.trim()||'匿名';
+  const type=document.getElementById('fbType').value;
+  const content=document.getElementById('fbContent').value.trim();
+  if(!content){toast('请输入内容');return;}
+  await fetch(API+'/api/feedbacks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nickname,type,content})});
+  document.getElementById('fbContent').value='';toast('提交成功');
+}
+async function loadMyFeedbacks(){
+  const nickname=document.getElementById('fbSearchNick').value.trim();
+  if(!nickname){toast('请输入昵称');return;}
+  const res=await fetch(API+'/api/feedbacks?nickname='+encodeURIComponent(nickname));
+  const items=await res.json();
+  if(!items.length){document.getElementById('fbList').innerHTML='<div class="empty">没有找到相关反馈</div>';return;}
+  const typeNames={suggestion:'建议',complaint:'投诉',praise:'表扬'};
+  const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML;};
+  document.getElementById('fbList').innerHTML=items.map(f=>`<div class="fb-card"><div class="meta"><span>${esc(typeNames[f.type]||f.type)}</span><span>${f.created_at?f.created_at.slice(0,10):''}</span><span class="badge ${f.status==='pending'?'badge-pending':'badge-replied'}">${f.status==='pending'?'处理中':'已回复'}</span></div><div class="content">${esc(f.content)}</div>${f.reply?`<div class="reply">回复：${esc(f.reply)}</div>`:''}</div>`).join('');
+}
+
+// 下拉刷新（菜单页）
+(function(){
+  let startY=0,pulling=false,moved=false;
+  const threshold=60,hint=document.createElement('div');
+  hint.style.cssText='text-align:center;font-size:13px;color:var(--text2);padding:0 0 8px;opacity:0;transition:opacity 0.2s;';
+  document.getElementById('page-menu').querySelector('.menu-summary').after(hint);
+
+  function scrollTop(){return document.documentElement.scrollTop||document.body.scrollTop;}
+  document.addEventListener('touchstart',e=>{if(scrollTop()<=5){startY=e.touches[0].clientY;pulling=true;moved=false;}},{passive:true});
+  document.addEventListener('touchmove',e=>{if(!pulling)return;const dy=e.touches[0].clientY-startY;if(dy>10){moved=true;hint.style.opacity=dy>threshold?'1':String(dy/threshold*0.7);hint.textContent=dy>threshold?'释放刷新':'↓ 下拉刷新';}},{passive:true});
+  document.addEventListener('touchend',()=>{if(!pulling)return;if(moved&&scrollTop()<=5){hint.textContent='刷新中...';hint.style.opacity='1';loadMenu().finally(()=>{hint.style.opacity='0';});}pulling=false;moved=false;startY=0;});
+})();
+
+// Init
+loadMenu();
+</script>
+</body>
+</html>

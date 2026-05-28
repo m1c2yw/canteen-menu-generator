@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "饭点小站",
+    "navigationBarBackgroundColor": "#c0392b",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f0eb"
+  },
+  "sitemapLocation": "sitemap.json"
+}

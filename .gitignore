@@ -1,0 +1,3 @@
+__pycache__/
+*.db
+data/dishes_export.json

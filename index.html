@@ -380,6 +380,51 @@
     pointer-events: none;
   }
   .toast.show { opacity: 1; }
+
+  /* ===== 替换弹窗 ===== */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 999;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .modal-content {
+    background: var(--card-bg); border-radius: var(--radius);
+    max-width: 620px; width: 92%; max-height: 72vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+  }
+  .modal-header {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h3 { font-size: 16px; font-weight: 700; }
+  .modal-close {
+    width: 32px; height: 32px; border: none; background: none;
+    cursor: pointer; font-size: 18px; color: var(--text-secondary);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: var(--border); }
+  .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+  .modal-hint { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+  .candidate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .candidate-item {
+    padding: 9px 12px; border-radius: 8px; cursor: pointer;
+    border: 2px solid var(--border); transition: all 0.15s;
+    display: flex; align-items: center; gap: 6px; font-size: 13px;
+    background: var(--card-bg);
+  }
+  .candidate-item:hover { border-color: #c0392b; background: #fef5f5; transform: translateY(-1px); }
+  [data-theme="dark"] .candidate-item:hover { background: #3a2020; }
+  .candidate-item.current { border-color: #c0392b; background: #fef0f0; font-weight: 600; }
+  [data-theme="dark"] .candidate-item.current { background: #3d1a1a; }
+  .candidate-item.conflict { opacity: 0.35; pointer-events: none; text-decoration: line-through; }
+  .candidate-name { flex: 1; }
+  .candidate-cuisine { font-size: 10px; color: var(--text-secondary); }
+  .dish-item { cursor: pointer; border-radius: 4px; transition: background 0.15s; }
+  .dish-item:hover { background: rgba(192,57,43,0.08); }
+  [data-theme="dark"] .dish-item:hover { background: rgba(255,255,255,0.06); }
 </style>
 </head>
 <body>
@@ -423,6 +468,17 @@
 <!-- 页脚 -->
 <div class="footer">
   食堂菜单自动生成平台 · 川菜为主其他地方菜为辅 · 周一至周五排菜 · 节假日休息 · 每日鸡鸭牛虾各一
+</div>
+
+<!-- 替换弹窗 -->
+<div class="modal-overlay" id="replaceModal" onclick="closeReplaceModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modalTitle">替换菜品</h3>
+      <button class="modal-close" onclick="closeReplaceModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
 </div>
 
 <!-- Toast -->
@@ -925,7 +981,7 @@ function cuisineTagClass(dish) {
 //  8周冷却追踪（控制重复率 ≤20%）
 // ============================================================
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const HISTORY_WEEKS = 8;
 const HISTORY_KEY = 'dish_history';
 
@@ -1099,25 +1155,26 @@ function generateWeeklyMenu(mondayDate) {
     const bigMeatDishes = bigKeys.map(key => ({
       ...pools[key][bigIndices[key]++],
       meatType: key,
+      category: key,
     }));
 
     // 其他荤菜：羊肉日 1羊+1猪，非羊肉日 2猪
     let otherMeatDishes;
     if (wdIdx === lambDay) {
       otherMeatDishes = [
-        { ...pools.lamb[otherIndices.lamb++], meatType: 'lamb' },
-        pools.otherMeat[otherIndices.otherMeat++],
+        { ...pools.lamb[otherIndices.lamb++], meatType: 'lamb', category: 'lamb' },
+        { ...pools.otherMeat[otherIndices.otherMeat++], category: 'otherMeat' },
       ];
       localStorage.setItem('last_lamb_date', dateStr);
     } else {
-      let a = pools.otherMeat[otherIndices.otherMeat++];
-      let b = pools.otherMeat[otherIndices.otherMeat++];
+      let a = { ...pools.otherMeat[otherIndices.otherMeat++], category: 'otherMeat' };
+      let b = { ...pools.otherMeat[otherIndices.otherMeat++], category: 'otherMeat' };
       // 同天避免同类食材（如两道排骨）
       const SIMILAR_WORDS = ['排骨', '猪蹄', '扣肉', '肉丸', '肘子'];
       const isSimilar = (x, y) => SIMILAR_WORDS.some(w => x.name.includes(w) && y.name.includes(w));
       let swaps = 0;
       while (isSimilar(a, b) && swaps < 5) {
-        b = pools.otherMeat[otherIndices.otherMeat++];
+        b = { ...pools.otherMeat[otherIndices.otherMeat++], category: 'otherMeat' };
         swaps++;
       }
       otherMeatDishes = [a, b];
@@ -1131,12 +1188,12 @@ function generateWeeklyMenu(mondayDate) {
         bigMeat: bigMeatDishes,
         otherMeat: otherMeatDishes,
         vegetables: [
-          pools.vegetable[otherIndices.vegetable++],
-          pools.vegetable[otherIndices.vegetable++],
-          pools.vegetable[otherIndices.vegetable++],
+          { ...pools.vegetable[otherIndices.vegetable++], category: 'vegetable' },
+          { ...pools.vegetable[otherIndices.vegetable++], category: 'vegetable' },
+          { ...pools.vegetable[otherIndices.vegetable++], category: 'vegetable' },
         ],
-        soup: pools.soup[otherIndices.soup++],
-        noodle: pools.noodle[otherIndices.noodle++],
+        soup: { ...pools.soup[otherIndices.soup++], category: 'soup' },
+        noodle: { ...pools.noodle[otherIndices.noodle++], category: 'noodle' },
       },
     };
 
@@ -1246,7 +1303,7 @@ function renderMenuGrid() {
   const grid = document.getElementById('menuGrid');
   const today = formatDate(new Date());
 
-  grid.innerHTML = currentMenu.map(day => {
+  grid.innerHTML = currentMenu.map((day, dayIdx) => {
     const isToday = day.date === today;
 
     if (day.isHoliday) {
@@ -1269,19 +1326,19 @@ function renderMenuGrid() {
           <div class="day-date">${day.date.slice(5)}</div>
         </div>
         <div class="day-body">
-          ${renderMeatGroup(d.bigMeat, d.otherMeat)}
+          ${renderMeatGroup(d.bigMeat, d.otherMeat, dayIdx)}
           <hr class="divider">
-          ${renderVegGroup(d.vegetables)}
+          ${renderVegGroup(d.vegetables, dayIdx)}
           <hr class="divider">
-          ${renderSingleGroup('soup', d.soup)}
-          ${renderSingleGroup('noodle', d.noodle)}
+          ${renderSingleGroup('soup', d.soup, dayIdx)}
+          ${renderSingleGroup('noodle', d.noodle, dayIdx)}
         </div>
       </div>
     `;
   }).join('');
 }
 
-function renderMeatGroup(bigMeat, otherMeat) {
+function renderMeatGroup(bigMeat, otherMeat, dayIdx) {
   const allMeat = [
     ...bigMeat.map(d => ({ ...d, isBig: true })),
     ...otherMeat.map(d => ({ ...d, isBig: false })),
@@ -1291,7 +1348,7 @@ function renderMeatGroup(bigMeat, otherMeat) {
       <div class="group-label">🥩 荤菜</div>
       <ul class="dish-list">
         ${allMeat.map(d => `
-          <li class="dish-item">
+          <li class="dish-item" data-day="${dayIdx}" data-category="${d.category || d.meatType || 'otherMeat'}" data-name="${d.name.replace(/"/g, '&quot;')}">
             <span class="dish-name">${MEAT_ICONS[d.meatType || d.protein || 'pork']} ${d.name}</span>
             <span class="dish-tag ${cuisineTagClass(d)}">${d.cuisine}</span>
           </li>
@@ -1301,7 +1358,7 @@ function renderMeatGroup(bigMeat, otherMeat) {
   `;
 }
 
-function renderVegGroup(dishes) {
+function renderVegGroup(dishes, dayIdx) {
   return `
     <div class="dish-group">
       <div class="group-label">
@@ -1309,7 +1366,7 @@ function renderVegGroup(dishes) {
       </div>
       <ul class="dish-list">
         ${dishes.map(d => `
-          <li class="dish-item">
+          <li class="dish-item" data-day="${dayIdx}" data-category="${d.category || 'vegetable'}" data-name="${d.name.replace(/"/g, '&quot;')}">
             <span class="dish-name">${d.name}</span>
             <span class="dish-tag ${cuisineTagClass(d)}">${d.cuisine}</span>
           </li>
@@ -1319,7 +1376,7 @@ function renderVegGroup(dishes) {
   `;
 }
 
-function renderSingleGroup(key, dish) {
+function renderSingleGroup(key, dish, dayIdx) {
   const icon = DISH_ICONS[key];
   const label = key === 'soup' ? '汤品' : '面食';
   return `
@@ -1328,7 +1385,7 @@ function renderSingleGroup(key, dish) {
         <span class="icon ${key}">${icon}</span> ${label}
       </div>
       <ul class="dish-list">
-        <li class="dish-item">
+        <li class="dish-item" data-day="${dayIdx}" data-category="${dish.category || key}" data-name="${dish.name.replace(/"/g, '&quot;')}">
           <span class="dish-name">${dish.name}</span>
           <span class="dish-tag ${cuisineTagClass(dish)}">${dish.cuisine}</span>
         </li>
@@ -1440,6 +1497,186 @@ function copyMenuText() {
     showToast('复制失败，请重试');
   });
 }
+
+// ============================================================
+//  点击菜品替换
+// ============================================================
+
+let replaceDayIdx = null;
+let replaceCategory = null;
+let replaceOldName = null;
+
+/** 保存当前菜单到 localStorage */
+function saveCurrentMenu() {
+  const weekKey = formatDate(currentMonday);
+
+  const allNames = [];
+  currentMenu.forEach(day => {
+    if (day.isHoliday || !day.dishes) return;
+    const d = day.dishes;
+    d.bigMeat.forEach(m => allNames.push(m.name));
+    d.otherMeat.forEach(m => allNames.push(m.name));
+    d.vegetables.forEach(v => allNames.push(v.name));
+    allNames.push(d.soup.name, d.noodle.name);
+  });
+  saveWeekDishes(weekKey, allNames);
+
+  // 重新计算重复率
+  const recentSet = getRecentDishSet();
+  currentRepeatRate = calcRepeatRate(currentMenu, recentSet);
+
+  const menuData = { week: currentMenu, repeatRate: currentRepeatRate, generatedAt: weekKey };
+  localStorage.setItem(`menu_${weekKey}`, JSON.stringify(menuData));
+}
+
+/** 获取某天所有菜名（用于冲突检测） */
+function getDayDishNames(dayIdx) {
+  const day = currentMenu[dayIdx];
+  if (!day || !day.dishes) return new Set();
+  const d = day.dishes;
+  const names = new Set();
+  d.bigMeat.forEach(m => names.add(m.name));
+  d.otherMeat.forEach(m => names.add(m.name));
+  d.vegetables.forEach(v => names.add(v.name));
+  names.add(d.soup.name);
+  names.add(d.noodle.name);
+  return names;
+}
+
+/** 获取某周所有菜名 */
+function getWeekDishNames() {
+  const names = new Set();
+  currentMenu.forEach(day => {
+    if (day.isHoliday || !day.dishes) return;
+    const d = day.dishes;
+    d.bigMeat.forEach(m => names.add(m.name));
+    d.otherMeat.forEach(m => names.add(m.name));
+    d.vegetables.forEach(v => names.add(v.name));
+    names.add(d.soup.name);
+    names.add(d.noodle.name);
+  });
+  return names;
+}
+
+/** 打开替换弹窗 */
+function openReplaceModal(dayIdx, category, oldName) {
+  replaceDayIdx = dayIdx;
+  replaceCategory = category;
+  replaceOldName = oldName;
+
+  // 从菜品库取对应分类的候选菜
+  const pool = DISH_DB[category] || [];
+  const dayNames = getDayDishNames(dayIdx);
+  const weekNames = getWeekDishNames();
+
+  // 候选：排除当天已有的菜（避免重复），当前菜本身排到最后
+  let candidates = pool.filter(d => !dayNames.has(d.name) || d.name === oldName);
+  // 当前菜排最后
+  candidates.sort((a, b) => {
+    if (a.name === oldName) return 1;
+    if (b.name === oldName) return -1;
+    return 0;
+  });
+
+  const categoryLabel = (() => {
+    if (BIG_MEAT_KEYS.includes(category)) return MEAT_LABELS[category];
+    if (category === 'otherMeat') return '猪肉 / 其他荤菜';
+    if (category === 'lamb') return '羊肉';
+    if (category === 'vegetable') return '素菜';
+    if (category === 'soup') return '汤品';
+    if (category === 'noodle') return '面食';
+    return category;
+  })();
+
+  document.getElementById('modalTitle').textContent = `替换「${oldName}」→ 选择${categoryLabel}`;
+
+  if (candidates.length === 0) {
+    document.getElementById('modalBody').innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:24px;">该分类没有可替换的菜品</p>';
+  } else {
+    document.getElementById('modalBody').innerHTML = `
+      <div class="modal-hint">点击下方菜品替换，灰色为当天已有无法选择</div>
+      <div class="candidate-grid">
+        ${candidates.map(d => {
+          const isCurrent = d.name === oldName;
+          const cssClass = isCurrent ? 'current' : '';
+          return `
+            <div class="candidate-item ${cssClass}" onclick="confirmReplace(event, '${d.name.replace(/'/g, "\\'")}', '${d.cuisine}')">
+              <span class="candidate-name">${d.name}</span>
+              <span class="candidate-cuisine">${d.cuisine}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  document.getElementById('replaceModal').classList.add('show');
+}
+
+/** 确认替换 */
+function confirmReplace(event, newName, cuisine) {
+  event.stopPropagation();
+  if (newName === replaceOldName) { closeReplaceModal(); return; }
+
+  const pool = DISH_DB[replaceCategory] || [];
+  const newDish = pool.find(d => d.name === newName);
+  if (!newDish) return;
+
+  // 添加分类标记
+  const dish = { ...newDish, category: replaceCategory };
+  if (BIG_MEAT_KEYS.includes(replaceCategory)) dish.meatType = replaceCategory;
+  if (replaceCategory === 'lamb') dish.meatType = 'lamb';
+
+  const day = currentMenu[replaceDayIdx];
+  const d = day.dishes;
+
+  // 根据分类找到对应位置并替换
+  if (BIG_MEAT_KEYS.includes(replaceCategory)) {
+    const idx = d.bigMeat.findIndex(m => m.name === replaceOldName);
+    if (idx >= 0) d.bigMeat[idx] = dish;
+  } else if (replaceCategory === 'otherMeat' || replaceCategory === 'lamb') {
+    const idx = d.otherMeat.findIndex(m => m.name === replaceOldName);
+    if (idx >= 0) d.otherMeat[idx] = dish;
+  } else if (replaceCategory === 'vegetable') {
+    const idx = d.vegetables.findIndex(v => v.name === replaceOldName);
+    if (idx >= 0) d.vegetables[idx] = dish;
+  } else if (replaceCategory === 'soup') {
+    d.soup = dish;
+  } else if (replaceCategory === 'noodle') {
+    d.noodle = dish;
+  }
+
+  saveCurrentMenu();
+  closeReplaceModal();
+  renderSummary();
+  renderMenuGrid();
+  showToast(`已替换：${replaceOldName} → ${newName} ✅`);
+}
+
+/** 关闭弹窗 */
+function closeReplaceModal(e) {
+  if (e && e.target !== document.getElementById('replaceModal')) return;
+  document.getElementById('replaceModal').classList.remove('show');
+  replaceDayIdx = null;
+  replaceCategory = null;
+  replaceOldName = null;
+}
+
+/** 点击菜品事件委托 */
+document.getElementById('menuGrid').addEventListener('click', (e) => {
+  const item = e.target.closest('.dish-item');
+  if (!item) return;
+  const dayIdx = parseInt(item.dataset.day);
+  const category = item.dataset.category;
+  const name = item.dataset.name;
+  if (isNaN(dayIdx) || !category || !name) return;
+  openReplaceModal(dayIdx, category, name);
+});
+
+/** ESC 关闭弹窗 */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeReplaceModal();
+});
 
 // ============================================================
 //  启动
