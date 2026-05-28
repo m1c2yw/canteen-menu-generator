@@ -244,11 +244,97 @@ def admin_add_staple(weekday: int, name: str, user=Depends(get_current_user)):
 
 @router.delete("/daily-staples/{staple_id}")
 def admin_delete_staple(staple_id: int, user=Depends(get_current_user)):
+    from datetime import date
+    today = date.today().isoformat()
     conn = get_db()
+    cur = conn.execute(
+        "SELECT id FROM daily_orders WHERE staple_id = ? AND order_date = ? LIMIT 1",
+        (staple_id, today)
+    )
+    if cur.fetchone():
+        conn.close()
+        raise HTTPException(status_code=400, detail="该主食今日已有预订，无法删除")
+    conn.execute("DELETE FROM daily_orders WHERE staple_id = ?", (staple_id,))
     conn.execute("DELETE FROM daily_staples WHERE id = ?", (staple_id,))
     conn.commit()
     conn.close()
     return {"message": "主食已删除"}
+
+
+# ─── 评分统计 ───
+@router.get("/ratings/summary")
+def admin_ratings_summary(date_from: str = None, date_to: str = None, user=Depends(get_current_user)):
+    """菜品评分汇总排行"""
+    conn = get_db()
+    conditions = []
+    params = []
+    if date_from:
+        conditions.append("menu_date >= ?")
+        params.append(date_from)
+    if date_to:
+        conditions.append("menu_date <= ?")
+        params.append(date_to)
+    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+    cur = conn.execute(
+        f"""SELECT dish_name,
+                  ROUND(AVG(score), 1) as avg_score,
+                  COUNT(*) as count,
+                  SUM(CASE WHEN score = 5 THEN 1 ELSE 0 END) as star5,
+                  SUM(CASE WHEN score = 4 THEN 1 ELSE 0 END) as star4,
+                  SUM(CASE WHEN score = 3 THEN 1 ELSE 0 END) as star3,
+                  SUM(CASE WHEN score = 2 THEN 1 ELSE 0 END) as star2,
+                  SUM(CASE WHEN score = 1 THEN 1 ELSE 0 END) as star1
+           FROM dish_ratings
+           {where}
+           GROUP BY dish_name
+           ORDER BY avg_score DESC""",
+        params
+    )
+    items = [dict(row) for row in cur.fetchall()]
+    total_count = sum(r["count"] for r in items)
+    overall_avg = round(sum(r["avg_score"] * r["count"] for r in items) / total_count, 1) if total_count > 0 else 0
+    conn.close()
+    return {
+        "total_ratings": total_count,
+        "dish_count": len(items),
+        "overall_avg": overall_avg,
+        "dishes": items
+    }
+
+
+@router.get("/ratings/detail")
+def admin_ratings_detail(date_from: str = None, date_to: str = None, dish_name: str = None, page: int = 1, page_size: int = 50, user=Depends(get_current_user)):
+    """评分明细列表"""
+    conn = get_db()
+    conditions = []
+    params = []
+    if date_from:
+        conditions.append("menu_date >= ?")
+        params.append(date_from)
+    if date_to:
+        conditions.append("menu_date <= ?")
+        params.append(date_to)
+    if dish_name:
+        conditions.append("dish_name LIKE ?")
+        params.append(f"%{dish_name}%")
+    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+
+    cur = conn.execute(
+        f"SELECT COUNT(*) as total FROM dish_ratings {where}", params
+    )
+    total = cur.fetchone()["total"]
+
+    offset = (page - 1) * page_size
+    cur = conn.execute(
+        f"""SELECT * FROM dish_ratings
+           {where}
+           ORDER BY created_at DESC
+           LIMIT ? OFFSET ?""",
+        params + [page_size, offset]
+    )
+    items = [dict(row) for row in cur.fetchall()]
+    conn.close()
+    return {"total": total, "page": page, "page_size": page_size, "items": items}
 
 
 # ─── 预订记录

@@ -100,3 +100,27 @@ class TokenResponse(BaseModel):
 class HolidayCreate(BaseModel):
     date: str
     name: str
+
+
+# ─── 评分 ───
+class RatingCreate(BaseModel):
+    dish_name: str
+    menu_date: str
+    score: int = Field(ge=1, le=5)
+    nickname: str = '食客'
+    device_id: str = ''
+
+
+class RatingResponse(BaseModel):
+    id: int
+    dish_name: str
+    menu_date: str
+    score: int
+    nickname: str
+    created_at: str
+
+
+class DishRatingSummary(BaseModel):
+    dish_name: str
+    avg_score: float
+    count: int

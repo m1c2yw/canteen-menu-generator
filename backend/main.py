@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from database import init_db, get_db
 from auth import get_current_user
 
-from routers import dishes, menus, feedbacks, admin
+from routers import dishes, menus, feedbacks, admin, ratings
 
 app = FastAPI(title="饭点小站管理平台", version="1.0.0")
 
@@ -24,6 +24,7 @@ app.include_router(dishes.router)
 app.include_router(menus.router)
 app.include_router(feedbacks.router)
 app.include_router(admin.router)
+app.include_router(ratings.router)
 
 
 @app.on_event("startup")
@@ -67,17 +68,63 @@ def get_daily_staples():
 def submit_daily_order(customer_name: str, orders: str):
     """提交每日主食预订 orders: [{staple_id, quantity}, ...] 的JSON字符串"""
     import json
-    from datetime import date
+    from datetime import date, datetime
+    now = datetime.now()
+    if now.hour >= 14:
+        return {"detail": "每日预订截止时间为下午2点，当前已截止"}, 400
     today = date.today().isoformat()
+    now_str = now.strftime("%Y-%m-%d %H:%M:%S")
     conn = get_db()
     for item in json.loads(orders):
         conn.execute(
-            "INSERT INTO daily_orders (customer_name, staple_id, quantity, order_date) VALUES (?,?,?,?)",
-            (customer_name, item['staple_id'], item['quantity'], today)
+            "INSERT INTO daily_orders (customer_name, staple_id, quantity, order_date, created_at) VALUES (?,?,?,?,?)",
+            (customer_name, item['staple_id'], item['quantity'], today, now_str)
         )
     conn.commit()
     conn.close()
     return {"message": "预订成功"}
+
+
+@app.get("/api/daily-orders/mine")
+def get_my_orders(customer_name: str, date_str: str = None):
+    """查询我的预订"""
+    from datetime import date
+    if not date_str:
+        date_str = date.today().isoformat()
+    conn = get_db()
+    cur = conn.execute(
+        """SELECT do.*, ds.name as staple_name FROM daily_orders do
+           JOIN daily_staples ds ON do.staple_id = ds.id
+           WHERE do.customer_name = ? AND do.order_date = ?
+           ORDER BY do.created_at DESC""",
+        (customer_name, date_str)
+    )
+    items = [dict(row) for row in cur.fetchall()]
+    conn.close()
+    return items
+
+
+@app.delete("/api/daily-orders/{order_id}")
+def cancel_order(order_id: int, customer_name: str):
+    """取消预订（仅当日，下午4点前）"""
+    from datetime import date, datetime
+    now = datetime.now()
+    if now.hour >= 15:
+        return {"detail": "取消预订截止时间为下午3点，当前已截止"}, 400
+    today = date.today().isoformat()
+    conn = get_db()
+    cur = conn.execute(
+        "SELECT * FROM daily_orders WHERE id = ? AND customer_name = ? AND order_date = ?",
+        (order_id, customer_name, today)
+    )
+    order = cur.fetchone()
+    if not order:
+        conn.close()
+        return {"detail": "订单不存在或无权取消"}, 404
+    conn.execute("DELETE FROM daily_orders WHERE id = ?", (order_id,))
+    conn.commit()
+    conn.close()
+    return {"message": "已取消预订"}
 
 
 if __name__ == "__main__":

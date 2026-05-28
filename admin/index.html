@@ -6,93 +6,92 @@
 <title>饭点小站管理后台</title>
 <style>
 :root {
-  --bg: #f7f0e6; --card: #fffdf8; --text: #3c1e1e; --text2: #8b7355;
-  --border: #d4c5b2; --red: #8b1a1a; --gold: #b8943c; --green: #4a6b2a;
+  --bg: #F5F6FA; --card: #FFFFFF; --text: #2D3436; --text2: #999;
+  --border: #E8E8ED; --red: #FF6B35; --gold: #FF8C5A; --green: #27AE60;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:"STSong","Songti SC","Noto Serif SC","PingFang SC","Microsoft YaHei",serif; background:var(--bg); color:var(--text); min-height:100vh;
-  background-image: radial-gradient(ellipse at 50% 0%, rgba(139,26,26,0.03) 0%, transparent 70%); }
+body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
 .login-wrap { display:flex; align-items:center; justify-content:center; min-height:100vh; }
-.login-card { background:var(--card); padding:44px; border:1px solid rgba(212,197,178,0.3); width:380px;
-  box-shadow:0 8px 32px rgba(139,26,26,0.08); }
-.login-card h2 { text-align:center; margin-bottom:28px; font-size:22px; color:var(--red); letter-spacing:4px; font-weight:900; }
-.login-card input { width:100%; padding:12px; margin-bottom:14px; border:1px solid #d4c5b2; font-size:14px; background:var(--card); font-family:inherit; }
-.login-card input:focus { border-color:var(--red); outline:none; box-shadow:0 0 0 2px rgba(139,26,26,0.08); }
+.login-card { background:var(--card); padding:44px; width:380px; border-radius:16px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.08); }
+.login-card h2 { text-align:center; margin-bottom:28px; font-size:22px; color:var(--red); letter-spacing:2px; font-weight:700; }
+.login-card input { width:100%; padding:12px; margin-bottom:14px; border:1px solid var(--border); font-size:14px; background:var(--card); font-family:inherit; border-radius:10px; }
+.login-card input:focus { border-color:var(--red); outline:none; box-shadow:0 0 0 3px rgba(255,107,53,0.1); }
 .login-card .error { color:var(--red); font-size:12px; margin-bottom:8px; }
 
-.header { background:linear-gradient(180deg,#6b1010,#8b1a1a); color:#f5deb3; padding:0 20px; display:flex; align-items:center; height:52px; gap:16px; border-bottom:2px solid var(--gold); position:sticky; top:0; z-index:10; }
-.header h1 { font-size:16px; white-space:nowrap; letter-spacing:2px; font-weight:900; }
-.btn-logout { margin-left:auto; padding:4px 14px; border:1px solid rgba(245,222,179,0.4); background:transparent; color:#f5deb3; cursor:pointer; font-size:12px; font-family:inherit; letter-spacing:1px; }
+.header { background:linear-gradient(135deg,var(--red),var(--gold)); color:#fff; padding:0 20px; display:flex; align-items:center; height:52px; gap:16px; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(255,107,53,0.15); }
+.header h1 { font-size:16px; white-space:nowrap; letter-spacing:1px; font-weight:700; }
+.btn-logout { margin-left:auto; padding:4px 14px; border:1px solid rgba(255,255,255,0.3); background:transparent; color:#fff; cursor:pointer; font-size:12px; font-family:inherit; letter-spacing:1px; border-radius:6px; }
 
 .main { max-width:1300px; margin:0 auto; padding:20px; }
 .page { display:none; }
 .page.active { display:block; }
 
-.tab-btn { padding:6px 14px; border:none; background:rgba(255,255,255,0.08); color:#f5deb3; cursor:pointer; font-size:13px; white-space:nowrap; font-family:inherit; letter-spacing:1px; transition:all 0.2s; }
-.tab-btn:hover { background:rgba(255,255,255,0.15); }
-.tab-btn.active { background:var(--gold); color:#3c1e1e; font-weight:700; }
+.tab-btn { padding:6px 14px; border:none; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.85); cursor:pointer; font-size:13px; white-space:nowrap; font-family:inherit; letter-spacing:1px; transition:all 0.2s; border-radius:6px; }
+.tab-btn:hover { background:rgba(255,255,255,0.2); }
+.tab-btn.active { background:rgba(255,255,255,0.95); color:var(--red); font-weight:700; }
 
-.btn { padding:8px 18px; border:none; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s; font-family:inherit; letter-spacing:1px; }
-.btn-red { background:linear-gradient(180deg,#8b1a1a,#a02020); color:#f5deb3; }
-.btn-red:hover { background:#6b1010; }
-.btn-outline { background:var(--card); border:1px solid #d4c5b2; color:var(--text); }
+.btn { padding:8px 18px; border:none; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s; font-family:inherit; letter-spacing:1px; border-radius:8px; }
+.btn-red { background:linear-gradient(135deg,var(--red),var(--gold)); color:#fff; }
+.btn-red:hover { opacity:0.9; }
+.btn-outline { background:var(--card); border:1px solid var(--border); color:var(--text); }
 .btn-outline:hover { border-color:var(--red); color:var(--red); }
 .btn-sm { padding:5px 14px; font-size:12px; }
 
 /* 菜单 */
 .week-nav { display:flex; align-items:center; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
-.week-nav button { min-width:32px;height:32px;border:1px solid #d4c5b2;background:var(--card);cursor:pointer;font-size:14px; color:var(--text); display:flex; align-items:center; justify-content:center; white-space:nowrap; }
-.week-nav .week-label { font-weight:700; font-size:14px; min-width:170px; text-align:center; letter-spacing:2px; }
-.menu-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.week-nav button { min-width:32px;height:32px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:14px; color:var(--text); display:flex; align-items:center; justify-content:center; white-space:nowrap; border-radius:6px; }
+.week-nav .week-label { font-weight:700; font-size:14px; min-width:170px; text-align:center; letter-spacing:1px; }
+.menu-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
 @media(max-width:1100px){.menu-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.menu-grid{grid-template-columns:repeat(2,1fr)}}
-.day-card { background:var(--card); overflow:hidden; box-shadow:0 2px 10px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.25); }
-.day-header { background:linear-gradient(90deg,#8b1a1a,#a02020); color:#f5deb3; padding:7px 10px; text-align:center; font-weight:700; font-size:12px; letter-spacing:1px; }
-.day-card.holiday .day-header { background:linear-gradient(90deg,#8b8378,#9b9388); }
-.day-body { padding:6px 8px 10px; }
-.dish-item { font-size:11px; padding:2px 4px; cursor:pointer; display:flex; justify-content:space-between; transition:background 0.15s; }
-.dish-item:hover { background:rgba(139,26,26,0.05); }
+.day-card { background:var(--card); border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+.day-header { background:linear-gradient(135deg,var(--red),var(--gold)); color:#fff; padding:8px 12px; text-align:center; font-weight:700; font-size:12px; letter-spacing:1px; }
+.day-card.holiday .day-header { background:linear-gradient(135deg,#B0B0B0,#C0C0C0); }
+.day-body { padding:8px 10px 12px; }
+.dish-item { font-size:11px; padding:3px 6px; cursor:pointer; display:flex; justify-content:space-between; transition:background 0.15s; border-radius:4px; }
+.dish-item:hover { background:rgba(255,107,53,0.05); }
 .dish-cuisine { font-size:9px; color:var(--text2); flex-shrink:0; }
-.dish-group-label { font-size:10px; font-weight:700; color:var(--red); margin:5px 0 2px; padding-bottom:2px; border-bottom:1px dotted #d4c5b2; letter-spacing:1px; }
+.dish-group-label { font-size:10px; font-weight:700; color:var(--red); margin:5px 0 2px; padding-bottom:2px; border-bottom:1px solid var(--border); letter-spacing:1px; }
 .dish-group-label:first-child { margin-top:0; }
-.toolbar { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
 
 /* 每日预订卡片 */
-.today-card { background:var(--card); padding:20px 24px; box-shadow:0 2px 12px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.25); max-width:500px; }
+.today-card { background:var(--card); padding:20px 24px; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-radius:12px; max-width:500px; }
 
 /* 表格 */
-table { width:100%; border-collapse:collapse; background:var(--card); box-shadow:0 2px 10px rgba(139,26,26,0.04); border:1px solid rgba(212,197,178,0.25); }
-th,td { padding:10px 14px; text-align:left; font-size:13px; border-bottom:1px solid #e8ddd0; }
-th { background:#f7f0e6; font-weight:700; color:var(--red); letter-spacing:1px; }
-tr:hover td { background:rgba(247,240,230,0.4); }
+table { width:100%; border-collapse:collapse; background:var(--card); box-shadow:0 2px 12px rgba(0,0,0,0.06); border-radius:12px; overflow:hidden; }
+th,td { padding:10px 14px; text-align:left; font-size:13px; border-bottom:1px solid var(--border); }
+th { background:var(--bg); font-weight:700; color:var(--red); letter-spacing:1px; }
+tr:hover td { background:rgba(255,107,53,0.03); }
 
 /* 弹窗 */
-.modal-overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(60,30,30,0.6);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s; }
+.modal-overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s; }
 .modal-overlay.show { opacity:1;pointer-events:auto; }
-.modal-content { background:var(--card);max-width:620px;width:92%;max-height:70vh;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(139,26,26,0.15); border:1px solid rgba(212,197,178,0.3); }
-.modal-header { padding:14px 20px;border-bottom:1px solid #e8ddd0;display:flex;justify-content:space-between;align-items:center; }
-.modal-header h3 { font-size:15px; color:var(--red); letter-spacing:2px; }
+.modal-content { background:var(--card);max-width:620px;width:92%;max-height:70vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.12); border-radius:14px; overflow:hidden; }
+.modal-header { padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center; }
+.modal-header h3 { font-size:15px; color:var(--red); letter-spacing:1px; }
 .modal-close { width:32px;height:32px;border:none;background:none;cursor:pointer;font-size:18px;color:var(--text2); }
 .modal-close:hover { color:var(--red); }
 .modal-body { padding:16px 20px;overflow-y:auto;flex:1; }
 .candidate-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:8px; }
-.candidate-item { padding:8px 12px;cursor:pointer;border:1px solid #d4c5b2;font-size:13px;display:flex;justify-content:space-between;background:var(--card); }
-.candidate-item:hover { border-color:var(--red);background:rgba(139,26,26,0.04); }
-.candidate-item.current { border-color:var(--red);background:rgba(139,26,26,0.06);font-weight:700; }
+.candidate-item { padding:8px 12px;cursor:pointer;border:1px solid var(--border);font-size:13px;display:flex;justify-content:space-between;background:var(--card); border-radius:8px; }
+.candidate-item:hover { border-color:var(--red);background:rgba(255,107,53,0.04); }
+.candidate-item.current { border-color:var(--red);background:rgba(255,107,53,0.06);font-weight:700; }
 
 .form-row { display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap; }
-.form-row input,.form-row select { padding:8px 12px;border:1px solid #d4c5b2;font-size:13px;background:var(--card);font-family:inherit; }
+.form-row input,.form-row select { padding:8px 12px;border:1px solid var(--border);font-size:13px;background:var(--card);font-family:inherit; border-radius:8px; }
 .form-row input:focus,.form-row select:focus { border-color:var(--red);outline:none; }
 .filter-bar { display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center; }
-.filter-bar select { padding:6px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px; }
-.badge { display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:1px; }
-.badge-pending { background:#fdf0e0;color:#8b6914;border:1px solid #e8d5a0; }
-.badge-replied { background:#e8f0e0;color:#4a6b2a;border:1px solid #c0d8b0; }
-.placeholder { text-align:center; padding:80px 20px; color:var(--text2); font-size:16px; letter-spacing:2px; }
+.filter-bar select { padding:6px 10px;border:1px solid var(--border);background:var(--card);font-family:inherit;font-size:13px; border-radius:6px; }
+.badge { display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:1px; border-radius:4px; }
+.badge-pending { background:#FFF3EE;color:#E55A2B;border:1px solid #FFD4C2; }
+.badge-replied { background:#E8F8EE;color:#27AE60;border:1px solid #B8E6CC; }
+.placeholder { text-align:center; padding:80px 20px; color:var(--text2); font-size:16px; letter-spacing:1px; }
 .placeholder .picon { font-size:56px; display:block; margin-bottom:14px; }
-.toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#3c1e1e;color:#f5deb3;padding:10px 24px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;letter-spacing:1px; }
+.toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#2D3436;color:#fff;padding:10px 24px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;letter-spacing:1px; border-radius:8px; }
 .toast.show { opacity:1; }
+
 </style>
 </head>
 <body>
@@ -115,9 +114,9 @@ tr:hover td { background:rgba(247,240,230,0.4); }
     <nav style="display:flex;gap:2px;flex:1;overflow-x:auto;">
       <button class="tab-btn active" onclick="switchTab('menu')">本周菜单</button>
       <button class="tab-btn" onclick="switchTab('today')">每日预订</button>
-      <button class="tab-btn" onclick="switchTab('meal')">餐食订购</button>
       <button class="tab-btn" onclick="switchTab('shop')">商品订购</button>
-      <button class="tab-btn" onclick="switchTab('feedback')">意见箱</button>
+      <button class="tab-btn" onclick="switchTab('ratings')">菜品评分</button>
+	      <button class="tab-btn" onclick="switchTab('feedback')">意见箱</button>
     </nav>
     <button class="btn-logout" onclick="logout()">退出</button>
   </header>
@@ -149,10 +148,10 @@ tr:hover td { background:rgba(247,240,230,0.4); }
         <h3 style="font-size:14px;color:var(--red);letter-spacing:2px;margin-bottom:14px;">每日主食供应设置</h3>
         <div id="stapleWeekdays"></div>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-          <select id="stapleWeekday" style="padding:7px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px;">
+          <select id="stapleWeekday" style="padding:7px 10px;border:1px solid var(--border);background:var(--card);font-family:inherit;font-size:13px;border-radius:6px;">
             <option value="0">周一</option><option value="1">周二</option><option value="2">周三</option><option value="3">周四</option><option value="4">周五</option>
           </select>
-          <input type="text" id="stapleName" placeholder="主食名称，如：包子" style="padding:7px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px;flex:1;min-width:140px;">
+          <input type="text" id="stapleName" placeholder="主食名称，如：包子" style="padding:7px 10px;border:1px solid var(--border);background:var(--card);font-family:inherit;font-size:13px;flex:1;min-width:140px;border-radius:6px;">
           <button class="btn btn-red btn-sm" onclick="addStaple()">添加</button>
         </div>
       </div>
@@ -160,7 +159,7 @@ tr:hover td { background:rgba(247,240,230,0.4); }
       <div style="margin-top:24px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
           <h3 style="font-size:14px;color:var(--red);letter-spacing:2px;">预订记录</h3>
-          <input type="date" id="orderDateFilter" onchange="loadOrdersAdmin()" style="padding:6px 10px;border:1px solid #d4c5b2;background:var(--card);font-family:inherit;font-size:13px;">
+          <input type="date" id="orderDateFilter" onchange="loadOrdersAdmin()" style="padding:6px 10px;border:1px solid var(--border);background:var(--card);font-family:inherit;font-size:13px;border-radius:6px;">
         </div>
         <div id="orderSummary" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;"></div>
         <table><thead><tr><th>预订人</th><th>主食</th><th>数量</th><th>时间</th></tr></thead><tbody id="orderTableBody"></tbody></table>
@@ -168,14 +167,32 @@ tr:hover td { background:rgba(247,240,230,0.4); }
       </div>
     </div>
 
-    <!-- 餐食订购 -->
-    <div id="page-meal" class="page"><div class="placeholder"><span class="picon">🍱</span>餐食订购功能开发中</div></div>
-
     <!-- 商品订购 -->
     <div id="page-shop" class="page"><div class="placeholder"><span class="picon">🛒</span>商品订购功能开发中</div></div>
 
-    <!-- 意见箱 -->
-    <div id="page-feedback" class="page">
+    <!-- 菜品评分 -->
+	    <div id="page-ratings" class="page">
+	      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;" id="ratingsStatsCards"></div>
+	      <div class="filter-bar">
+	        <input type="date" id="ratingsDateFrom" onchange="loadRatingsSummary()" style="padding:6px 10px;border:1px solid var(--border);background:var(--card);font-family:inherit;font-size:13px;border-radius:6px;">
+	        <span style="font-size:13px;color:var(--text2);">至</span>
+	        <input type="date" id="ratingsDateTo" onchange="loadRatingsSummary()" style="padding:6px 10px;border:1px solid var(--border);background:var(--card);font-family:inherit;font-size:13px;border-radius:6px;">
+	        <button class="btn btn-outline btn-sm" onclick="clearRatingsFilter()">清除筛选</button>
+	        <button class="btn btn-outline btn-sm" onclick="loadRatingsDetail()" id="btnRatingsDetail">查看评分明细</button>
+	      </div>
+	      <table><thead><tr><th>排名</th><th>菜品名称</th><th>均分</th><th>评分人数</th><th style="color:#e74c3c;">★5</th><th>★4</th><th>★3</th><th>★2</th><th>★1</th></tr></thead><tbody id="ratingsSummaryBody"></tbody></table>
+	    </div>
+
+	    <!-- 评分明细弹窗 -->
+	    <div class="modal-overlay" id="ratingsDetailModal" onclick="closeRatingsDetailModal(event)">
+	      <div class="modal-content" onclick="event.stopPropagation()" style="max-width:800px;">
+	        <div class="modal-header"><h3>评分明细</h3><button class="modal-close" onclick="closeRatingsDetailModal()">&#10005;</button></div>
+	        <div class="modal-body" id="ratingsDetailBody" style="max-height:55vh;"></div>
+	      </div>
+	    </div>
+
+	    <!-- 意见箱 -->
+	    <div id="page-feedback" class="page">
       <div class="filter-bar">
         <select id="fbStatusFilter" onchange="loadFeedbacks()"><option value="">全部状态</option><option value="pending">待回复</option><option value="replied">已回复</option></select>
       </div>
@@ -240,7 +257,7 @@ function getMonday(d){const n=new Date(d);const day=n.getDay();const diff=n.getD
 function formatDate(d){return d.toISOString().slice(0,10);}
 function weekLabel(d){const dn=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const dayNum=dn.getUTCDay()||7;dn.setUTCDate(dn.getUTCDate()+4-dayNum);const ys=new Date(Date.UTC(dn.getUTCFullYear(),0,1));const w=Math.ceil((((dn-ys)/86400000)+1)/7);return d.getFullYear()+'年 第'+w+'周';}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
-async function api(url,opts={}){const headers={'Content-Type':'application/json'};if(token)headers['Authorization']='Bearer '+token;const res=await fetch(API+url,{headers,...opts});if(res.status===401){logout();throw new Error('未登录');}return res.json();}
+async function api(url,opts={}){const headers={'Content-Type':'application/json'};if(token)headers['Authorization']='Bearer '+token;const res=await fetch(API+url,{headers,...opts});if(res.status===401){logout();throw new Error('未登录');}const data=await res.json();if(!res.ok){toast(data.detail||'操作失败');throw new Error(data.detail||'操作失败');}return data;}
 
 if(token)showApp();
 
@@ -263,11 +280,12 @@ function switchTab(name){
   const page=document.getElementById('page-'+name);
   if(page)page.classList.add('active');
   const btns=document.querySelectorAll('.tab-btn');
-  const names=['menu','today','meal','shop','feedback'];
+  const names=['menu','today','shop','ratings','feedback'];
   const idx=names.indexOf(name);
   if(idx>=0&&idx<btns.length)btns[idx].classList.add('active');
   if(name==='menu')loadMenu();
   if(name==='today'){loadStaplesAdmin();loadOrdersAdmin();}
+  if(name==='ratings')loadRatingsSummary();
   if(name==='feedback')loadFeedbacks();
   window.scrollTo(0,0);
 }
@@ -370,7 +388,7 @@ async function loadStaplesAdmin(){
   let h='';
   for(let i=0;i<5;i++){
     const items=data[i]||[];
-    const tags=items.map(s=>`<span style="display:inline-flex;align-items:center;gap:4px;background:#f7f0e6;padding:3px 10px;font-size:13px;border:1px solid #d4c5b2;margin:3px;">${s.name}<button style="cursor:pointer;background:none;border:none;color:var(--red);font-size:14px;padding:0;line-height:1;" onclick="delStaple(${s.id})">&times;</button></span>`).join('');
+    const tags=items.map(s=>`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--bg);padding:3px 10px;font-size:13px;border:1px solid var(--border);margin:3px;border-radius:6px;">${s.name}<button style="cursor:pointer;background:none;border:none;color:var(--red);font-size:14px;padding:0;line-height:1;" onclick="delStaple(${s.id})">&times;</button></span>`).join('');
     h+=`<div style="margin-bottom:8px;"><b style="font-size:13px;display:inline-block;width:42px;">${wdNames[i]}</b>${tags||'<span style="color:var(--text2);font-size:12px;">未设置</span>'}</div>`;
   }
   document.getElementById('stapleWeekdays').innerHTML=h;
@@ -466,6 +484,102 @@ async function addHoliday(){
   document.getElementById('newHolidayDate').value='';document.getElementById('newHolidayName').value='';loadHolidays();toast('已添加');
 }
 async function deleteHoliday(date){await api('/api/admin/holidays/'+date,{method:'DELETE'});loadHolidays();toast('已删除');}
+
+// ═══ 菜品评分 ═══
+function ratingToStars(avg){
+  if(!avg||avg<=0)return '☆☆☆☆☆';
+  const full=Math.floor(avg);
+  const half=avg-full>=0.5?1:0;
+  const empty=5-full-half;
+  return '★'.repeat(full)+(half?'☆':'')+'☆'.repeat(empty);
+}
+
+async function loadRatingsSummary(){
+  const df=document.getElementById('ratingsDateFrom').value;
+  const dt=document.getElementById('ratingsDateTo').value;
+  let url='/api/admin/ratings/summary';
+  const params=[];
+  if(df)params.push('date_from='+df);
+  if(dt)params.push('date_to='+dt);
+  if(params.length)url+='?'+params.join('&');
+  try{
+    const data=await api(url);
+    const avgStars=data.overall_avg>0?ratingToStars(data.overall_avg):'—';
+    document.getElementById('ratingsStatsCards').innerHTML=[
+      `<div style="background:var(--card);padding:16px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);flex:1;min-width:140px;text-align:center;border-radius:12px;"><div style="font-size:28px;font-weight:700;color:var(--red);">${data.total_ratings}</div><div style="font-size:12px;color:var(--text2);letter-spacing:1px;">总评分数</div></div>`,
+      `<div style="background:var(--card);padding:16px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);flex:1;min-width:140px;text-align:center;border-radius:12px;"><div style="font-size:28px;font-weight:700;color:var(--red);">${data.dish_count}</div><div style="font-size:12px;color:var(--text2);letter-spacing:1px;">覆盖菜品数</div></div>`,
+      `<div style="background:var(--card);padding:16px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);flex:1;min-width:140px;text-align:center;border-radius:12px;"><div style="font-size:28px;font-weight:700;color:${data.overall_avg>=3.5?'var(--green)':data.overall_avg>=2.5?'var(--gold)':'var(--red)'};">${data.overall_avg||'—'}</div><div style="font-size:12px;color:var(--text2);letter-spacing:1px;">整体均分</div></div>`,
+      `<div style="background:var(--card);padding:16px 22px;box-shadow:0 2px 12px rgba(0,0,0,0.06);flex:1;min-width:180px;text-align:center;border-radius:12px;"><div style="font-size:18px;color:var(--gold);letter-spacing:2px;">${avgStars}</div><div style="font-size:12px;color:var(--text2);letter-spacing:1px;">星级评价</div></div>`
+    ].join('');
+    if(!data.dishes||!data.dishes.length){
+      document.getElementById('ratingsSummaryBody').innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text2);padding:40px;">暂无评分数据</td></tr>';
+      return;
+    }
+    document.getElementById('ratingsSummaryBody').innerHTML=data.dishes.map((d,i)=>{
+      const stars=ratingToStars(d.avg_score);
+      const color=d.avg_score>=4?'var(--green)':d.avg_score>=3?'var(--gold)':d.avg_score>=2?'var(--red)':'var(--text2)';
+      return `<tr>
+        <td style="font-weight:700;color:${i<3?'var(--red)':'var(--text2)'};">${i+1}</td>
+        <td>${d.dish_name}</td>
+        <td style="font-weight:700;color:${color};"><span style="font-size:11px;letter-spacing:1px;">${stars}</span> ${d.avg_score}</td>
+        <td>${d.count}人</td>
+        <td>${d.star5||0}</td>
+        <td>${d.star4||0}</td>
+        <td>${d.star3||0}</td>
+        <td>${d.star2||0}</td>
+        <td>${d.star1||0}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    console.error('loadRatingsSummary error:', e);
+    document.getElementById('ratingsStatsCards').innerHTML='';
+    document.getElementById('ratingsSummaryBody').innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text2);padding:30px;">加载失败：'+ (e.message||'未知错误') +'</td></tr>';
+  }
+}
+
+async function loadRatingsDetail(page){
+  page=page||1;
+  const df=document.getElementById('ratingsDateFrom').value;
+  const dt=document.getElementById('ratingsDateTo').value;
+  let url='/api/admin/ratings/detail?page='+page+'&page_size=50';
+  if(df)url+='&date_from='+df;
+  if(dt)url+='&date_to='+dt;
+  try{
+    const data=await api(url);
+    const totalPages=Math.ceil(data.total/data.page_size);
+    if(!data.items||!data.items.length){
+      document.getElementById('ratingsDetailBody').innerHTML='<p style="text-align:center;color:var(--text2);padding:30px;">暂无评分记录</p>';
+    }else{
+      const stars=s=>'★'.repeat(s)+'☆'.repeat(5-s);
+      let html=`<div style="font-size:12px;color:var(--text2);margin-bottom:12px;">共 <b>${data.total}</b> 条评分记录</div>
+      <table><thead><tr><th>菜品</th><th>日期</th><th>评分</th><th>昵称</th><th>时间</th></tr></thead><tbody>`;
+      data.items.forEach(r=>{
+        html+=`<tr><td>${r.dish_name}</td><td>${r.menu_date}</td><td style="color:var(--gold);letter-spacing:1px;">${stars(r.score)}</td><td>${r.nickname||'食客'}</td><td style="font-size:12px;color:var(--text2);">${r.created_at?r.created_at.slice(0,19):''}</td></tr>`;
+      });
+      html+=`</tbody></table>`;
+      if(totalPages>1){
+        html+=`<div style="display:flex;justify-content:center;gap:8px;margin-top:14px;">`;
+        if(page>1)html+=`<button class="btn btn-outline btn-sm" onclick="loadRatingsDetail(${page-1})">上一页</button>`;
+        html+=`<span style="font-size:13px;color:var(--text2);line-height:32px;">第 ${page}/${totalPages} 页</span>`;
+        if(page<totalPages)html+=`<button class="btn btn-outline btn-sm" onclick="loadRatingsDetail(${page+1})">下一页</button>`;
+        html+=`</div>`;
+      }
+      document.getElementById('ratingsDetailBody').innerHTML=html;
+    }
+    document.getElementById('ratingsDetailModal').classList.add('show');
+  }catch(e){toast('加载失败');}
+}
+
+function closeRatingsDetailModal(e){
+  if(e&&e.target!==document.getElementById('ratingsDetailModal'))return;
+  document.getElementById('ratingsDetailModal').classList.remove('show');
+}
+
+function clearRatingsFilter(){
+  document.getElementById('ratingsDateFrom').value='';
+  document.getElementById('ratingsDateTo').value='';
+  loadRatingsSummary();
+}
 </script>
 </body>
 </html>

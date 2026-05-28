@@ -1,33 +1,174 @@
-.header { background: linear-gradient(180deg, #6b1010, #8b1a1a); color: #f5deb3; padding: 36rpx 24rpx 32rpx; text-align: center; border-bottom: 4rpx solid #b8943c; }
-.title { font-size: 38rpx; font-weight: 900; display: block; letter-spacing: 8rpx; }
-.sub { font-size: 22rpx; opacity: 0.65; margin-top: 8rpx; display: block; letter-spacing: 2rpx; }
+/* ===== 头部 ===== */
+.header {
+  background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+  color: #fff;
+  padding: 40rpx 32rpx 36rpx;
+  text-align: center;
+}
+.title {
+  font-size: 40rpx;
+  font-weight: 700;
+  display: block;
+  letter-spacing: 4rpx;
+}
+.sub {
+  font-size: 24rpx;
+  opacity: 0.75;
+  margin-top: 8rpx;
+  display: block;
+  font-weight: 400;
+}
 
-.loading, .error { text-align: center; padding: 100rpx 0; font-size: 28rpx; color: #8b7355; }
+/* ===== 状态 ===== */
+.loading, .error {
+  text-align: center;
+  padding: 120rpx 0;
+  font-size: 28rpx;
+  color: #999;
+}
 
-.menu-list { padding: 20rpx 20rpx; display: flex; flex-direction: column; gap: 18rpx; }
+/* ===== 菜单列表 ===== */
+.menu-list {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+}
 
-.day-card { background: #fffdf8; overflow: hidden; box-shadow: 0 4rpx 16rpx rgba(139,26,26,0.05); border: 1rpx solid rgba(212,197,178,0.3); }
-.day-card.holiday { opacity: 0.45; }
+.menu-list .day-card + .day-card {
+  margin-top: 20rpx;
+}
 
-.day-header { background: linear-gradient(90deg, #8b1a1a, #a02020); color: #f5deb3; padding: 16rpx 24rpx; display: flex; justify-content: space-between; align-items: center; border-bottom: 1rpx solid #b8943c; }
-.day-card.holiday .day-header { background: linear-gradient(90deg, #8b8378, #9b9388); border-bottom: 1rpx solid #c0b8a8; }
-.day-name { font-size: 30rpx; font-weight: 700; letter-spacing: 4rpx; }
-.day-date { font-size: 22rpx; opacity: 0.65; }
+/* ===== 日卡片 ===== */
+.day-card {
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+.day-card.holiday {
+  opacity: 0.5;
+}
 
-.holiday-notice { text-align: center; padding: 60rpx 0; font-size: 28rpx; color: #8b7355; letter-spacing: 4rpx; }
+/* 卡头 */
+.day-header {
+  background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+  color: #fff;
+  padding: 18rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.day-card.holiday .day-header {
+  background: linear-gradient(135deg, #B0B0B0, #C0C0C0);
+}
+.day-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+.day-date {
+  font-size: 24rpx;
+  opacity: 0.75;
+  font-weight: 400;
+}
 
-.day-body { padding: 20rpx 24rpx; }
+/* 节假日 */
+.holiday-notice {
+  text-align: center;
+  padding: 60rpx 0;
+  font-size: 28rpx;
+  color: #999;
+  letter-spacing: 2rpx;
+}
 
-.section { margin-bottom: 14rpx; }
-.section-label { font-size: 22rpx; font-weight: 700; color: #8b1a1a; display: block; margin-bottom: 6rpx; padding-bottom: 6rpx; border-bottom: 1rpx dotted #d4c5b2; letter-spacing: 2rpx; }
+/* 卡片内容 */
+.day-body {
+  padding: 24rpx;
+}
 
-.dish-row { display: flex; justify-content: space-between; align-items: center; padding: 5rpx 0; }
-.dish-name { font-size: 28rpx; }
+/* ===== 区段 ===== */
+.section {
+  margin-bottom: 20rpx;
+}
+.section-label {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #FF6B35;
+  display: block;
+  margin-bottom: 12rpx;
+  padding-left: 4rpx;
+  letter-spacing: 1rpx;
+}
 
-.dish-tag { font-size: 20rpx; padding: 2rpx 10rpx; }
-.tag-sichuan { background: #fdf0ed; color: #8b1a1a; border: 1rpx solid #e8c8c0; }
-.tag-other { background: #f5efe6; color: #8b7355; border: 1rpx solid #d4c5b2; }
+/* ===== 菜品行 ===== */
+.dish-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rpx 0;
+}
+.dish-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.dish-icon {
+  font-size: 26rpx;
+  margin-right: 6rpx;
+}
+.dish-name {
+  font-size: 28rpx;
+  color: #2D3436;
+}
 
-.divider { border-top: 1rpx solid #e8ddd0; margin: 10rpx 0; }
+/* ===== 评分 ===== */
+.dish-rating {
+  display: flex;
+  align-items: center;
+  margin-left: 12rpx;
+}
+.stars {
+  font-size: 22rpx;
+  color: #FF6B35;
+  letter-spacing: 2rpx;
+}
+.rating-num {
+  font-size: 20rpx;
+  color: #999;
+  margin-left: 4rpx;
+}
 
-.footer { text-align: center; padding: 30rpx; font-size: 22rpx; color: #8b7355; letter-spacing: 2rpx; }
+/* ===== 菜系标签 ===== */
+.dish-tag {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+}
+.tag-sichuan {
+  background: #FFF3EE;
+  color: #FF6B35;
+  border: 1px solid #FFD4C2;
+}
+.tag-other {
+  background: #F5F6FA;
+  color: #888;
+  border: 1px solid #E8E8ED;
+}
+
+/* ===== 分隔线 ===== */
+.divider {
+  height: 1px;
+  background: #F0F0F3;
+  margin: 16rpx 0;
+}
+
+/* ===== 底部 ===== */
+.footer {
+  text-align: center;
+  padding: 32rpx;
+  font-size: 22rpx;
+  color: #999;
+  letter-spacing: 2rpx;
+}

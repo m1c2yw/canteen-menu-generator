@@ -1,3 +1,6 @@
 __pycache__/
 *.db
 data/dishes_export.json
+.agents/
+.claude/
+skills-lock.json

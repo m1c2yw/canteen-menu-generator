@@ -4,9 +4,9 @@
   ],
   "window": {
     "navigationBarTitleText": "饭点小站",
-    "navigationBarBackgroundColor": "#c0392b",
+    "navigationBarBackgroundColor": "#FF6B35",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#f5f0eb"
+    "backgroundColor": "#F5F6FA"
   },
   "sitemapLocation": "sitemap.json"
 }

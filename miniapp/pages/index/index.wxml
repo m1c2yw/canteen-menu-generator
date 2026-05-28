@@ -29,7 +29,10 @@
             <view class="section">
               <text class="section-label">🥩 大荤</text>
               <view class="dish-row" wx:for="{{item.bigMeat}}" wx:for-item="m" wx:key="name">
-                <text class="dish-name">{{m.icon}} {{m.name}}</text>
+                <view class="dish-info">
+                  <text class="dish-icon">{{m.icon}}</text>
+                  <text class="dish-name">{{m.name}}</text>
+                </view>
                 <text class="dish-tag {{m.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{m.cuisine}}</text>
               </view>
             </view>
@@ -37,17 +40,19 @@
             <view class="section">
               <text class="section-label">🍖 其他荤</text>
               <view class="dish-row" wx:for="{{item.otherMeat}}" wx:for-item="m" wx:key="name">
-                <text class="dish-name">{{m.name}}</text>
+                <view class="dish-info">
+                  <text class="dish-name">{{m.name}}</text>
+                </view>
                 <text class="dish-tag {{m.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{m.cuisine}}</text>
               </view>
             </view>
 
-            <view class="divider"></view>
-
             <view class="section">
               <text class="section-label">🥬 素菜</text>
               <view class="dish-row" wx:for="{{item.vegetables}}" wx:for-item="v" wx:key="name">
-                <text class="dish-name">{{v.name}}</text>
+                <view class="dish-info">
+                  <text class="dish-name">{{v.name}}</text>
+                </view>
                 <text class="dish-tag {{v.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{v.cuisine}}</text>
               </view>
             </view>
@@ -55,11 +60,15 @@
             <view class="divider"></view>
 
             <view class="dish-row">
-              <text class="dish-name">🥣 {{item.soup.name}}</text>
+              <view class="dish-info">
+                <text class="dish-name">🥣 {{item.soup.name}}</text>
+              </view>
               <text class="dish-tag {{item.soup.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{item.soup.cuisine}}</text>
             </view>
             <view class="dish-row">
-              <text class="dish-name">🍜 {{item.noodle.name}}</text>
+              <view class="dish-info">
+                <text class="dish-name">🍜 {{item.noodle.name}}</text>
+              </view>
               <text class="dish-tag {{item.noodle.isSichuan ? 'tag-sichuan' : 'tag-other'}}">{{item.noodle.cuisine}}</text>
             </view>
           </view>

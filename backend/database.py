@@ -9,10 +9,11 @@ DB_PATH = os.path.join(DB_DIR, 'canteen.db')
 def get_db():
     """获取数据库连接（每请求一个连接）"""
     os.makedirs(DB_DIR, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
+    conn.execute("PRAGMA busy_timeout=5000")
     return conn
 
 
@@ -95,6 +96,16 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE IF NOT EXISTS dish_ratings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dish_name TEXT NOT NULL,
+            menu_date TEXT NOT NULL,
+            score INTEGER NOT NULL CHECK(score >= 1 AND score <= 5),
+            nickname TEXT DEFAULT '食客',
+            device_id TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE INDEX IF NOT EXISTS idx_menu_items_menu ON menu_items(menu_id);
         CREATE INDEX IF NOT EXISTS idx_menu_items_date ON menu_items(day_date);
         CREATE INDEX IF NOT EXISTS idx_dish_history_week ON dish_history(week_key);
@@ -102,5 +113,11 @@ def init_db():
         CREATE UNIQUE INDEX IF NOT EXISTS idx_dishes_name ON dishes(name);
         CREATE INDEX IF NOT EXISTS idx_feedbacks_status ON feedbacks(status);
     """)
+    # 迁移：为旧数据库添加 device_id 列
+    try:
+        conn.execute("ALTER TABLE dish_ratings ADD COLUMN device_id TEXT DEFAULT ''")
+    except:
+        pass  # 列已存在则忽略
+
     conn.commit()
     conn.close()
