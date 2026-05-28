@@ -63,7 +63,7 @@
   [data-theme="dark"] .summary-item,
   [data-theme="dark"] .day-card { background: var(--card-bg); }
   [data-theme="dark"] .day-header { background: linear-gradient(135deg, #8b1a1a, #a04000); }
-  [data-theme="dark"] .day-header.weekend { background: linear-gradient(135deg, #a0501a, #b87020); }
+  [data-theme="dark"] .day-card.holiday .day-header { background: linear-gradient(135deg, #555, #666); }
   /* ===== 顶部导航 ===== */
   .header {
     background: linear-gradient(135deg, #c0392b, #e74c3c);
@@ -202,17 +202,17 @@
   /* ===== 菜单网格 ===== */
   .menu-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
   }
 
-  @media (max-width: 1200px) {
-    .menu-grid { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1000px) {
+    .menu-grid { grid-template-columns: repeat(3, 1fr); }
   }
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     .menu-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @media (max-width: 480px) {
+  @media (max-width: 420px) {
     .menu-grid { grid-template-columns: 1fr; }
   }
 
@@ -240,8 +240,16 @@
     padding: 12px 14px;
     text-align: center;
   }
-  .day-header.weekend {
-    background: linear-gradient(135deg, #e67e22, #f39c12);
+  .day-card.holiday { opacity: 0.6; }
+  .day-card.holiday .day-header {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+  }
+  .day-card.holiday .holiday-notice {
+    text-align: center;
+    padding: 32px 12px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 600;
   }
   .day-name {
     font-size: 14px;
@@ -348,7 +356,7 @@
     .day-card.today { outline: 2px solid #c0392b; }
     .header { background: #c0392b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .actions, .week-nav button { display: none; }
-    .menu-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .menu-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
     .day-card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
     .day-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
@@ -379,7 +387,7 @@
   <div class="header-inner">
     <div>
       <h1>🍽️ 食堂菜单自动生成平台</h1>
-      <div class="header-subtitle">川菜为主 · 每日 4 荤 3 素 1 汤 1 面食 · 每周不重样</div>
+      <div class="header-subtitle">川菜为主 · 每日 4 荤 3 素 1 汤 1 面食 · 周一至周五 · 节假日除外</div>
     </div>
     <div class="week-nav">
       <button onclick="navigateWeek(-1)" title="上一周">◀</button>
@@ -412,7 +420,7 @@
 
 <!-- 页脚 -->
 <div class="footer">
-  食堂菜单自动生成平台 · 菜品以川菜为主，其他地方菜为辅 · 每日保证鸡肉、鸭肉、牛肉、虾各一道
+  食堂菜单自动生成平台 · 川菜为主其他地方菜为辅 · 周一至周五排菜 · 节假日休息 · 每日鸡鸭牛虾各一
 </div>
 
 <!-- Toast -->
@@ -580,6 +588,38 @@ const MEAT_ICONS = { chicken: '🐔', duck: '🦆', beef: '🐂', shrimp: '🦐'
 const DISH_ICONS = { vegetable: '🥬', soup: '🥣', noodle: '🍜' };
 
 // ============================================================
+//  2026年中国法定节假日（需根据每年国务院通知更新）
+// ============================================================
+
+const HOLIDAYS = new Set([
+  // 元旦
+  '2026-01-01',
+  // 春节（农历正月初一：2026-02-17，除夕至初四）
+  '2026-02-16', '2026-02-17', '2026-02-18', '2026-02-19', '2026-02-20',
+  // 清明节
+  '2026-04-06',
+  // 劳动节
+  '2026-05-01', '2026-05-04', '2026-05-05',
+  // 端午节（农历五月初五）
+  '2026-06-19',
+  // 中秋节（农历八月十五，约2026-09-25）
+  '2026-09-25',
+  // 国庆节
+  '2026-10-01', '2026-10-02', '2026-10-05', '2026-10-06', '2026-10-07',
+]);
+
+/** 检查指定日期是否为节假日 */
+function isHoliday(date) {
+  return HOLIDAYS.has(formatDate(date));
+}
+
+/** 检查指定日期是否为工作日（周一至周五且非法定节假日） */
+function isWorkday(date) {
+  const day = date.getDay();
+  return day >= 1 && day <= 5 && !isHoliday(date);
+}
+
+// ============================================================
 //  工具函数
 // ============================================================
 
@@ -626,9 +666,9 @@ function getWeekNumber(date) {
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 
-/** 获取周日的日期字符串 */
+/** 获取周五的日期字符串 */
 function getWeekEndDate(monday) {
-  return formatDate(new Date(monday.getTime() + 6 * 86400000));
+  return formatDate(new Date(monday.getTime() + 4 * 86400000));
 }
 
 /** 获取菜系标签 CSS 类名 */
@@ -643,11 +683,10 @@ function cuisineTagClass(dish) {
 let currentMonday = getMonday(new Date());
 let currentMenu = null;
 
-/** 生成一周菜单 */
+/** 生成一周菜单（周一至周五，法定节假日除外） */
 function generateWeeklyMenu(mondayDate) {
   const weekKey = formatDate(mondayDate);
 
-  // 先检查 localStorage
   const cached = localStorage.getItem(`menu_${weekKey}`);
   if (cached) {
     return JSON.parse(cached);
@@ -665,14 +704,29 @@ function generateWeeklyMenu(mondayDate) {
   };
 
   const week = [];
+  // 只遍历周一(i=1)到周五(i=5)
   for (let i = 0; i < 7; i++) {
+    const dayOfWeek = (mondayDate.getDay() + i) % 7;
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue; // 跳过周末
+
     const date = new Date(mondayDate);
     date.setDate(date.getDate() + i);
+    const dateStr = formatDate(date);
+
+    if (isHoliday(date)) {
+      week.push({
+        date: dateStr,
+        dayName: getDayName(date),
+        isHoliday: true,
+        dishes: null,
+      });
+      continue;
+    }
 
     const day = {
-      date: formatDate(date),
+      date: dateStr,
       dayName: getDayName(date),
-      isWeekend: date.getDay() === 0 || date.getDay() === 6,
+      isHoliday: false,
       dishes: {
         chicken: pools.chicken[indices.chicken++],
         duck: pools.duck[indices.duck++],
@@ -691,7 +745,6 @@ function generateWeeklyMenu(mondayDate) {
     week.push(day);
   }
 
-  // 存入 localStorage
   localStorage.setItem(`menu_${weekKey}`, JSON.stringify(week));
   return week;
 }
@@ -726,8 +779,15 @@ function renderWeekLabel() {
 function renderSummary() {
   let sichuanCount = 0;
   let otherCount = 0;
+  let workdayCount = 0;
+  let holidayCount = 0;
 
   currentMenu.forEach(day => {
+    if (day.isHoliday) {
+      holidayCount++;
+      return;
+    }
+    workdayCount++;
     const d = day.dishes;
     const allDishes = [
       d.chicken, d.duck, d.beef, d.shrimp,
@@ -749,8 +809,12 @@ function renderSummary() {
       其他地方菜 <span class="summary-count">${otherCount}</span> 道
     </div>
     <div class="summary-item">
-      📅 日期范围：${formatDate(currentMonday)} ~ ${getWeekEndDate(currentMonday)}
+      📅 ${formatDate(currentMonday)} ~ ${getWeekEndDate(currentMonday)} · 工作日 <span class="summary-count">${workdayCount}</span> 天
     </div>
+    ${holidayCount > 0 ? `
+    <div class="summary-item">
+      🏖️ 节假日 <span class="summary-count">${holidayCount}</span> 天休息
+    </div>` : ''}
   `;
 }
 
@@ -760,12 +824,24 @@ function renderMenuGrid() {
   const today = formatDate(new Date());
 
   grid.innerHTML = currentMenu.map(day => {
-    const d = day.dishes;
     const isToday = day.date === today;
 
+    if (day.isHoliday) {
+      return `
+        <div class="day-card holiday">
+          <div class="day-header">
+            <div class="day-name">${day.dayName}</div>
+            <div class="day-date">${day.date.slice(5)}</div>
+          </div>
+          <div class="holiday-notice">🏖️<br>节假日休息</div>
+        </div>
+      `;
+    }
+
+    const d = day.dishes;
     return `
       <div class="day-card ${isToday ? 'today' : ''}">
-        <div class="day-header ${day.isWeekend ? 'weekend' : ''}">
+        <div class="day-header">
           <div class="day-name">${day.dayName}</div>
           <div class="day-date">${day.date.slice(5)}</div>
         </div>
@@ -920,6 +996,7 @@ function copyMenuText() {
   text += '═'.repeat(40) + '\n\n';
 
   currentMenu.forEach(day => {
+    if (day.isHoliday) return;
     const d = day.dishes;
     text += `【${day.dayName} ${day.date.slice(5)}】\n`;
     text += `  🐔 鸡肉：${d.chicken.name}（${d.chicken.cuisine}）\n`;
